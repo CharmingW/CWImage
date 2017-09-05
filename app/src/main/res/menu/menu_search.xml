@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/camera"
+        android:icon="@drawable/ic_menu_camera_black_24dp"
+        android:title="@string/menu_camera"
+        app:showAsAction="always"/>
+
+    <group android:checkableBehavior="single">
+        <item
+            android:checked="true"
+            android:id="@+id/picture"
+            android:title="搜图片"/>
+        <item
+            android:id="@+id/wallpaper"
+            android:title="搜壁纸"/>
+    </group>
+
+</menu>

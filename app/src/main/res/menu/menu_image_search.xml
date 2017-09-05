@@ -1,0 +1,59 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="com.charmingwong.cwimage.imagesearch.ImageSearchActivity">
+
+
+    <item
+        android:layout_gravity="left"
+        android:id="@+id/action_search"
+        android:title="搜索"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="collapseActionView|ifRoom"
+        />
+
+    <item
+        android:id="@+id/action_phone"
+        android:icon="@drawable/ic_phone_android_white_24dp"
+        android:orderInCategory="1"
+        android:title="适应手机"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/action_computer"
+        android:icon="@drawable/ic_computer_white_24dp"
+        android:orderInCategory="2"
+        android:title="适应电脑"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/action_filter"
+        android:icon="@drawable/ic_filter_list_white_24dp"
+        android:orderInCategory="3"
+        android:title="过滤"
+        app:showAsAction="never">
+
+        <menu>
+            <item
+                android:id="@+id/p_all"
+                android:title="全部"/>
+            <item
+                android:id="@+id/p_480"
+                android:title="480p"/>
+            <item
+                android:id="@+id/p_720"
+                android:title="720p"/>
+            <item
+                android:id="@+id/p_1080"
+                android:title="1080p"/>
+            <item
+                android:id="@+id/p_2K"
+                android:title="2K"/>
+        </menu>
+
+    </item>
+
+</menu>

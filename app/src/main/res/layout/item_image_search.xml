@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_image_bg"
+    android:clipChildren="true"
+    android:elevation="@dimen/common_elevation_s"
+    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+    android:orientation="vertical"
+    android:outlineProvider="background">
+
+    <ImageView
+         android:contentDescription="@string/image_content_description"
+        android:id="@+id/image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/item_image_bg"
+        android:scaleType="centerCrop"/>
+
+    <FrameLayout
+        android:id="@+id/tagLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/common_xxs_spacing">
+
+        <TextView
+            android:id="@+id/resolution"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/common_image_item_text_s"/>
+
+        <TextView
+            android:id="@+id/type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/common_m_spacing"
+            android:textColor="@color/text_black"
+            android:textSize="@dimen/common_image_item_text_s"/>
+    </FrameLayout>
+</LinearLayout>
+

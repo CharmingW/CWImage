@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00c5b1</color>
+    <color name="colorPrimaryDark">#01897a</color>
+    <color name="colorAccent">#01897a</color>
+
+    <color name="colorDark">#01897a</color>
+    <color name="colorMiddleDark">#00a291</color>
+
+    <color name="background">#e3e3e3</color>
+
+    <color name="text_black">#222222</color>
+
+    <color name="tag_light">#ffffff</color>
+
+    //菜单文字颜色
+    <color name="boom_menu_text">#000000</color>
+
+    <color name="progressbar_bg">#88333333</color>
+</resources>

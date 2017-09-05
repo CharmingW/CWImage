@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/qh"
+            android:title="360"/>
+        <item
+            android:id="@+id/sogou"
+            android:title="搜狗"/>
+        <item
+            android:id="@+id/baidu"
+            android:title="百度"/>
+        <item
+            android:id="@+id/chinaso"
+            android:title="中国搜索"/>
+        <item
+            android:id="@+id/bing"
+            android:title="必应"/>
+        <item
+            android:id="@+id/google"
+            android:title="谷歌(国内需翻墙)"/>
+    </group>
+</menu>

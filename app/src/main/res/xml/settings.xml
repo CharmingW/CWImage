@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/engines_name"
+        android:entryValues="@array/engines_no"
+        android:key="default_engine"
+        android:persistent="true"
+        android:title="默认搜索引擎"
+        />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/theme_color"
+        android:entryValues="@array/theme_no"
+        android:key="theme"
+        android:persistent="true"
+        android:title="主题颜色"
+        />
+
+</PreferenceScreen>

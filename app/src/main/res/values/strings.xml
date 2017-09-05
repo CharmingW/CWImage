@@ -1,0 +1,342 @@
+<resources>
+    <string name="app_name">Tu</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="title_activity_image_search">搜索结果</string>
+    <string name="menu_camera">相机</string>
+
+    <string name="select_title">以图搜图</string>
+    <string name="error_network">加载失败，下拉刷新</string>
+    <string name="clear_memory">清除缓存</string>
+    <string name="image_content_description">0</string>
+
+
+    <string-array name="select_image_way_selection">
+        <item>拍照</item>
+        <item>从相册选择</item>
+    </string-array>
+
+    <string-array name="select_search_way_selection">
+        <item>局部搜索</item>
+        <item>全局搜索</item>
+    </string-array>
+
+    <string-array name="beauty_channel">
+        <item>明星</item>
+        <item>萌女</item>
+        <item>粉嫩</item>
+        <item>车模</item>
+        <item>街拍</item>
+        <item>婚纱</item>
+        <item>时装秀</item>
+        <item>showgirl</item>
+        <item>cosplay</item>
+        <item>主播秀</item>
+    </string-array>
+
+    <string-array name="fun_channel">
+        <item>热门</item>
+        <item>GIF</item>
+        <item>奇趣</item>
+        <item>恶搞</item>
+        <item>神吐槽</item>
+        <item>内涵</item>
+        <item>萌宠</item>
+    </string-array>
+
+    <string-array name="wallpaper_channel">
+        <item>热门</item>
+        <item>美女</item>
+        <item>明星</item>
+        <item>风景</item>
+        <item>小清新</item>
+        <item>酷车</item>
+        <item>设计</item>
+        <item>爱情</item>
+        <item>植物</item>
+        <item>动物</item>
+        <item>动漫</item>
+        <item>星空</item>
+        <item>炫酷</item>
+        <item>军事</item>
+        <item>摄影</item>
+        <item>游戏</item>
+        <item>影视</item>
+        <item>手绘</item>
+        <item>体育</item>
+    </string-array>
+
+    <string-array name="pet_channel">
+        <item>全部</item>
+        <item>汪星人</item>
+        <item>喵星人</item>
+        <item>哈士奇</item>
+        <item>小兔兔</item>
+    </string-array>
+
+    <string-array name="car_channel">
+        <item>热门</item>
+        <item>名车</item>
+        <item>跑车</item>
+        <item>宝马</item>
+        <item>奔驰</item>
+        <item>哈雷</item>
+        <item>兰博基尼</item>
+        <item>概念车</item>
+        <item>老爷车</item>
+        <item>劳斯莱斯</item>
+        <item>摩托</item>
+        <item>法拉利</item>
+        <item>宾利</item>
+
+    </string-array>
+
+    <string-array name="go_channel">
+        <item>热门</item>
+        <item>国内</item>
+        <item>亚洲</item>
+        <item>欧洲</item>
+        <item>大洋洲</item>
+        <item>北美洲</item>
+        <item>南美洲</item>
+        <item>非洲</item>
+
+    </string-array>
+
+    <string-array name="foot_channel">
+        <item>全部</item>
+        <item>寿司</item>
+        <item>烧烤</item>
+        <item>沙拉</item>
+        <item>豆制品</item>
+        <item>烘焙</item>
+        <item>凉菜</item>
+        <item>甜品</item>
+        <item>下饭菜</item>
+        <item>海鲜</item>
+        <item>零食</item>
+        <item>小吃</item>
+        <item>下酒菜</item>
+        <item>创意菜</item>
+        <item>饮品</item>
+        <item>家常菜</item>
+    </string-array>
+
+    <string-array name="art_channel">
+        <item>国画</item>
+        <item>涂鸦</item>
+        <item>艺术评赏</item>
+        <item>水墨</item>
+        <item>版画</item>
+        <item>水彩</item>
+        <item>铅笔画</item>
+        <item>书法</item>
+        <item>芭蕾</item>
+    </string-array>
+
+    <string-array name="photography_channel">
+        <item>自然</item>
+        <item>风光摄影</item>
+        <item>微距</item>
+        <item>人像摄影</item>
+        <item>生态摄影</item>
+        <item>黑白</item>
+        <item>创意摄影</item>
+        <item>时尚</item>
+        <item>国家地理</item>
+        <item>老照片</item>
+        <item>其他</item>
+    </string-array>
+
+    <string-array name="design_channel">
+        <item>平面设计</item>
+        <item>交互设计</item>
+        <item>文体艺术</item>
+        <item>矢量素材</item>
+        <item>模板</item>
+        <item>PPT模板</item>
+        <item>字体设计</item>
+        <item>包装设计</item>
+        <item>Banner</item>
+    </string-array>
+
+    <string-array name="home_channel">
+        <item>热门</item>
+        <item>客厅</item>
+        <item>卧室</item>
+        <item>厨房</item>
+        <item>卫生间</item>
+        <item>阳台</item>
+        <item>书房</item>
+        <item>儿童房</item>
+        <item>衣帽间</item>
+        <item>阁楼</item>
+    </string-array>
+
+    <string-array name="video_channel">
+        <item>全部</item>
+        <item>爱情</item>
+        <item>犯罪</item>
+        <item>惊悚</item>
+        <item>科幻</item>
+        <item>喜剧</item>
+        <item>奇幻</item>
+        <item>动作</item>
+        <item>剧情</item>
+        <item>悬疑</item>
+        <item>恐怖</item>
+        <item>动画</item>
+        <item>其他类型</item>
+    </string-array>
+
+    <string-array name="news_channel">
+        <item>热门</item>
+        <item>国内</item>
+        <item>国际</item>
+        <item>社会</item>
+        <item>娱乐</item>
+        <item>体育</item>
+        <item>军事</item>
+        <item>历史</item>
+        <item>自然</item>
+    </string-array>
+
+
+    //中关村壁纸
+
+    <string-array name="wallpaper_primary__category">
+        <item>分类</item>
+        <item>尺寸</item>
+        <item>最新更新</item>
+        <item>类型</item>
+    </string-array>
+
+    <string-array name="wallpaper_secondary_category_types">
+        <item>全部</item>
+        <item>风景</item>
+        <item>美女</item>
+        <item>动漫</item>
+        <item>创意</item>
+        <item>爱情</item>
+        <item>卡通</item>
+        <item>可爱</item>
+        <item>明星</item>
+        <item>游戏</item>
+        <item>车模</item>
+        <item>汽车</item>
+        <item>品牌</item>
+        <item>体育</item>
+        <item>节日</item>
+        <item>影视</item>
+        <item>建筑</item>
+        <item>动物</item>
+        <item>植物</item>
+        <item>星座</item>
+        <item>美食</item>
+        <item>其他</item>
+    </string-array>
+
+    <string-array name="wallpaper_secondary_category_phone_size">
+        <item>全部</item>
+        <item>1080x1920</item>
+        <item>720x1280</item>
+        <item>800x1280</item>
+        <item>768x1280</item>
+        <item>750x1334</item>
+        <item>640x1136</item>
+        <item>640x960</item>
+        <item>600x1024</item>
+        <item>540x960</item>
+        <item>480x854</item>
+        <item>480x800</item>
+        <item>320x480</item>
+        <item>240x320</item>
+    </string-array>
+
+    <string-array name="wallpaper_secondary_category_desktop_size">
+        <item>全部</item>
+        <item>2880x1800</item>
+        <item>2560x1600</item>
+        <item>1920x1200</item>
+        <item>1920x1080</item>
+        <item>1680x1050</item>
+        <item>1600x900</item>
+        <item>1440x900</item>
+        <item>1366x768</item>
+        <item>1280x102</item>
+        <item>1280x800</item>
+        <item>1024x768</item>
+    </string-array>
+
+    <string-array name="wallpaper_secondary_category_order">
+        <item>最新</item>
+        <item>按推荐数</item>
+        <item>按下载量</item>
+    </string-array>
+
+    <string-array name="wallpaper_secondary_category_landscape">
+        <item>全部</item>
+        <item>竖屏</item>
+        <item>宽屏</item>
+        <item>电脑壁纸</item>
+    </string-array>
+
+    <string-array name="engines_name">
+        <item>360</item>
+        <item>搜狗</item>
+        <item>百度</item>
+        <item>中国搜索</item>
+        <item>必应</item>
+        <item>谷歌(国内需翻墙)</item>
+    </string-array>
+
+    <string-array name="engines_no">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="welcome_image_type">
+        <item>动漫手机壁纸</item>
+        <item>风景手机壁纸</item>
+        <item>美女手机壁纸</item>
+        <item>跑车手机壁纸</item>
+        <item>你的名字手机壁纸</item>
+        <item>海贼王手机壁纸</item>
+        <item>美食手机壁纸</item>
+        <item>明星手机壁纸</item>
+        <item>星空手机壁纸</item>
+        <item>手绘手机壁纸</item>
+    </string-array>
+
+    <string-array name="theme_no">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string-array name="theme_color">
+        <item>默认</item>
+        <item>红</item>
+        <item>橙</item>
+        <item>黄</item>
+        <item>绿</item>
+        <item>青</item>
+        <item>蓝</item>
+        <item>紫</item>
+    </string-array>
+
+</resources>

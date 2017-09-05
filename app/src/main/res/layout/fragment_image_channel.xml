@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.charmingwong.cwimage.VpSwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/libraryPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v4.view.ViewPager>
+
+        <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/channel_bmb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
+            app:bmb_buttonEnum="textInsideCircle"
+            app:bmb_buttonPlaceEnum="buttonPlace_custom"
+            app:bmb_piecePlaceEnum="piecePlace_custom"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/common_s_spacing"
+            app:srcCompat="@drawable/ic_vertical_align_top_white_24dp"/>
+    </android.support.design.widget.CoordinatorLayout>
+
+</com.charmingwong.cwimage.VpSwipeRefreshLayout>
+
+

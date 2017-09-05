@@ -1,0 +1,104 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowEnterAnimation">@anim/activity_in</item>
+        <item name="android:windowExitAnimation">@anim/activity_out</item>
+    </style>
+
+    <style name="Red" parent="AppTheme">
+        <item name="colorPrimary">@android:color/holo_red_light</item>
+        <item name="colorPrimaryDark">@android:color/holo_red_dark</item>
+        <item name="colorAccent">@android:color/holo_red_dark</item>
+    </style>
+
+    <style name="Orange" parent="AppTheme">
+        <item name="colorPrimary">@android:color/holo_orange_light</item>
+        <item name="colorPrimaryDark">@android:color/holo_orange_dark</item>
+        <item name="colorAccent">@android:color/holo_orange_dark</item>
+    </style>
+
+    <style name="Yellow" parent="AppTheme">
+        <item name="colorPrimary">#fcf000</item>
+        <item name="colorPrimaryDark">#b8af00</item>
+        <item name="colorAccent">#b8af00</item>
+    </style>
+
+    <style name="Green" parent="AppTheme">
+        <item name="colorPrimary">#00ff4c</item>
+        <item name="colorPrimaryDark">#00af34</item>
+        <item name="colorAccent">#00af34</item>
+    </style>
+
+    <style name="LightGreen" parent="AppTheme">
+        <item name="colorPrimary">@android:color/holo_green_light</item>
+        <item name="colorPrimaryDark">@android:color/holo_green_dark</item>
+        <item name="colorAccent">@android:color/holo_green_dark</item>
+    </style>
+
+    <style name="Blue" parent="AppTheme">
+        <item name="colorPrimary">@android:color/holo_blue_light</item>
+        <item name="colorPrimaryDark">@android:color/holo_blue_dark</item>
+        <item name="colorAccent">@android:color/holo_blue_dark</item>
+    </style>
+
+    <style name="Purple" parent="AppTheme">
+        <item name="colorPrimary">@android:color/holo_purple</item>
+        <item name="colorPrimaryDark">@android:color/holo_purple</item>
+        <item name="colorAccent">@android:color/holo_purple</item>
+    </style>
+
+    <style name="cursor">
+        //输入框光标
+        <item name="android:textCursorDrawable">@drawable/cursor</item>
+
+
+    </style>
+
+    <style name="actionTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:paddingLeft">10dp</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="background">@null</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar.TransparentStatusBar">
+        <!--设置为true，视图延伸到状态栏，有的机型状态栏会呈现浅灰色，但不用考虑背景色问题，为false则不延伸到状态栏，但要考虑背景色与状态栏字体颜色，-->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+
+        <!--Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
+    </style>
+
+    <style name="AppTheme.NoActionBar.TransparentStatusBarBlack">
+        <!--设置为true，-->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+
+        <!--Android 5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <!--<item name="android:navigationBarColor">@android:color/transparent</item>-->
+    </style>
+
+    <style name="AppTheme.NoActionBar.FullScreen">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+</resources>
