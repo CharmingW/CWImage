@@ -9,22 +9,51 @@ greendao {
 
 
 android {
+
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
+
     defaultConfig {
         applicationId "com.charmingwong.cwimage"
         minSdkVersion 21
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        targetSdkVersion 26
+        versionCode 10000
+        versionName "1.0.0_alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable true
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            debuggable true
+            shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk') && outputFile.name.contains("debug")) {
+                //这里修改apk文件名
+                def fileName = outputFile.name.replace("app", "CWImage_${defaultConfig.versionName}_${buildTime()}").replace("-debug", "")
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+
+    useLibrary 'org.apache.http.legacy'
+}
+
+static def buildTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
 }
 
 dependencies {
