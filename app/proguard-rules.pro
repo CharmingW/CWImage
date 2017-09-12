@@ -123,7 +123,6 @@ public static java.lang.String TABLENAME;
 -keepattributes EnclosingMethod
 
 # Don't remove any GreenRobot classes
--keep class org.greenrobot.** {*;}
 -dontwarn org.greenrobot.**
 
 #使用注解需要添加

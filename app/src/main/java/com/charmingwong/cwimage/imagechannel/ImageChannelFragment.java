@@ -121,14 +121,19 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
         @Override
         public void onPageSelected(int position) {
+
             mCurrentChannel = position;
             mRefreshLayout.setRefreshing(false);
             mBuilderManager.setupBoomMenu(position);
 
+            final View rootView = CHANNEL_ITEM_FRAGMENTS[position].getView();
+            View view = rootView.findViewById(R.id.progressBar);
+
             if (getChannelItemImagesLastIndex(position) == 0
                 && CHANNEL_ITEM_FRAGMENTS[position] == null) {
-                final View rootView = CHANNEL_ITEM_FRAGMENTS[position].getView();
-                rootView.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+                view.setVisibility(View.VISIBLE);
+            } else {
+                view.setVisibility(View.GONE);
             }
         }
 
@@ -223,7 +228,13 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
     @Override
     public void showChannelImages(int channel, List<ChannelImage> channelImages) {
-        final View rootView = CHANNEL_ITEM_FRAGMENTS[channel].getView();
+
+        Fragment fragment = CHANNEL_ITEM_FRAGMENTS[channel];
+        final View rootView = fragment.getView();
+        if (fragment == null || fragment.getView() == null) {
+            return;
+        }
+
         rootView.findViewById(R.id.progressBar).setVisibility(View.GONE);
         rootView.findViewById(R.id.error_view).setVisibility(View.GONE);
         ChannelImageListAdapter adapter = getChannelImageListAdapter(channel);
