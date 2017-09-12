@@ -43,8 +43,7 @@
             android:label=""
             android:launchMode="singleTop"
             android:name=".imagesearch.ImageSearchActivity"
-            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar"
-            android:windowSoftInputMode="adjustResize|stateVisible">
+            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar">
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
@@ -64,8 +63,7 @@
             android:exported="false"
             android:launchMode="singleTop"
             android:name=".searchbyimage.SearchByImageActivity"
-            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar"
-            android:windowSoftInputMode="adjustResize|stateVisible">
+            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar">
         </activity>
 
         <activity

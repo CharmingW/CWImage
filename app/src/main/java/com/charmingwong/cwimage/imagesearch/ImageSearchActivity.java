@@ -39,12 +39,10 @@ public class ImageSearchActivity extends BaseActivity {
                 .load(R.drawable.ic_bar_3)
                 .into(imageView);
 
-
         Bundle bundle = getIntent().getExtras();
 
         String query = bundle.getString("query");
         getSupportActionBar().setTitle(query);
-
 
         ImageSearchFragment fragment = (ImageSearchFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (fragment == null) {

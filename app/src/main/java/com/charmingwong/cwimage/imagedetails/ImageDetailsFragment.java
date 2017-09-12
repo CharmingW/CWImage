@@ -1,7 +1,6 @@
 package com.charmingwong.cwimage.imagedetails;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,15 +8,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -31,10 +27,8 @@ import com.charmingwong.cwimage.util.ApplicationUtils;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-
 import java.io.File;
 import java.util.List;
-
 import uk.co.senab.photoview.PhotoView;
 
 /**
@@ -120,6 +114,12 @@ public class ImageDetailsFragment extends Fragment implements ImageDetailsContra
         setUpFloatingActionMenu();
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPresenter.start();
     }
 
     private void setUpFloatingActionMenu() {
@@ -229,16 +229,12 @@ public class ImageDetailsFragment extends Fragment implements ImageDetailsContra
             }
         });
 
-        TextView setWp = new TextView(getActivity());
-        setWp.setText("设为壁纸");
-        setWp.setGravity(Gravity.CENTER);
-        setWp.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        setWp.setBackground(null);
-        setWp.setTextColor(Color.WHITE);
+        ImageView setWp = new ImageView(getActivity());
+        setWp.setImageResource(R.drawable.ic_wallpaper_white_24dp);
         SubActionButton setWpButton = new SubActionButton.Builder(getActivity())
-                .setContentView(setWp)
-                .setTheme(SubActionButton.THEME_DARKER)
-                .build();
+            .setContentView(setWp)
+            .setTheme(SubActionButton.THEME_DARKER)
+            .build();
         setWpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

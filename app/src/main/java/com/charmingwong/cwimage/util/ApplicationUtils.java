@@ -13,10 +13,12 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,14 +40,13 @@ public class ApplicationUtils {
     /**
      * [获取应用程序版本名称信息]
      *
-     * @param context
      * @return 当前应用的版本名称
      */
     public static String getVersionName(Context context) {
         try {
             PackageManager packageManager = context.getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(
-                    context.getPackageName(), 0);
+                context.getPackageName(), 0);
             return packageInfo.versionName;
 
         } catch (PackageManager.NameNotFoundException e) {
@@ -58,7 +59,7 @@ public class ApplicationUtils {
     public static File getDiskCacheDir(Context context, String uniqueName) {
         String cachePath;
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())
-                || !Environment.isExternalStorageRemovable()) {
+            || !Environment.isExternalStorageRemovable()) {
             cachePath = context.getExternalCacheDir().getPath();
         } else {
             cachePath = context.getCacheDir().getPath();
@@ -87,10 +88,11 @@ public class ApplicationUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (darkmode) {
                 activity.getWindow().getDecorView()
-                        .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    .setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             } else {
                 activity.getWindow().getDecorView()
-                        .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             }
             return true;
         }
@@ -115,7 +117,7 @@ public class ApplicationUtils {
      * 设置状态栏图标为深色和魅族特定的文字风格
      * 可以用来判断是否为Flyme用户
      *
-     * @param window   需要设置的窗口
+     * @param window 需要设置的窗口
      * @param darkmode 是否把状态栏字体及图标颜色设置为深色
      * @return boolean 成功执行返回true
      */
@@ -124,10 +126,11 @@ public class ApplicationUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (darkmode) {
                 window.getDecorView()
-                        .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    .setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             } else {
                 window.getDecorView()
-                        .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             }
             return true;
         }
@@ -137,9 +140,9 @@ public class ApplicationUtils {
             try {
                 WindowManager.LayoutParams lp = window.getAttributes();
                 Field darkFlag = WindowManager.LayoutParams.class
-                        .getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON");
+                    .getDeclaredField("MEIZU_FLAG_DARK_STATUS_BAR_ICON");
                 Field meizuFlags = WindowManager.LayoutParams.class
-                        .getDeclaredField("meizuFlags");
+                    .getDeclaredField("meizuFlags");
                 darkFlag.setAccessible(true);
                 meizuFlags.setAccessible(true);
                 int bit = darkFlag.getInt(null);
@@ -187,10 +190,10 @@ public class ApplicationUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                    | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
             window.setNavigationBarColor(Color.TRANSPARENT);
@@ -199,14 +202,14 @@ public class ApplicationUtils {
 
     public static void setStrictMode() {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-                .detectDiskReads()
-                .detectDiskWrites()
-                .detectNetwork().penaltyLog().build());
+            .detectDiskReads()
+            .detectDiskWrites()
+            .detectNetwork().penaltyLog().build());
         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects()
-                .detectLeakedClosableObjects()
-                .penaltyLog()
-                .penaltyDeath()
-                .build());
+            .detectLeakedClosableObjects()
+            .penaltyLog()
+            .penaltyDeath()
+            .build());
     }
 
     public static int getStatusBarHeight(Context context) {
@@ -240,7 +243,8 @@ public class ApplicationUtils {
     }
 
 
-    public static void simulateScroll(final View view, final int startX, final int startY, final int endX, final int endY, final int duration) {
+    public static void simulateScroll(final View view, final int startX, final int startY, final int endX,
+        final int endY, final int duration) {
         final long downTime = SystemClock.uptimeMillis();
         final MotionEvent event = MotionEvent.obtain(downTime, downTime, MotionEvent.ACTION_DOWN, startX, startY, 0);
         view.onTouchEvent(event);
@@ -259,7 +263,8 @@ public class ApplicationUtils {
                     }
                     tempX = (startX + i * deltaX / count);
                     tempY = (startY + i * deltaY / count);
-                    final MotionEvent event = MotionEvent.obtain(downTime + i * 5, downTime + i * 5, MotionEvent.ACTION_MOVE, tempX, tempY, 0);
+                    final MotionEvent event = MotionEvent
+                        .obtain(downTime + i * 5, downTime + i * 5, MotionEvent.ACTION_MOVE, tempX, tempY, 0);
                     ((Activity) view.getContext()).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -270,13 +275,13 @@ public class ApplicationUtils {
                 ((Activity) view.getContext()).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        final MotionEvent event = MotionEvent.obtain(downTime + duration, downTime + duration, MotionEvent.ACTION_UP, endX, endY, 0);
+                        final MotionEvent event = MotionEvent
+                            .obtain(downTime + duration, downTime + duration, MotionEvent.ACTION_UP, endX, endY, 0);
                         view.onTouchEvent(event);
                     }
                 });
             }
         }).start();
-
 
         event.recycle();
     }
@@ -298,7 +303,7 @@ public class ApplicationUtils {
     }
 
     public static String getFilePathFromContentUri(Uri selectedVideoUri,
-                                                   ContentResolver contentResolver) {
+        ContentResolver contentResolver) {
         String filePath;
         String[] filePathColumn = {MediaStore.MediaColumns.DATA};
 
@@ -317,13 +322,13 @@ public class ApplicationUtils {
     public static Uri getImageExternalContentUri(Context context, java.io.File imageFile) {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = context.getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID},
-                MediaStore.Images.Media.DATA + "=? ",
-                new String[]{filePath}, null);
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            new String[]{MediaStore.Images.Media._ID},
+            MediaStore.Images.Media.DATA + "=? ",
+            new String[]{filePath}, null);
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor
-                    .getColumnIndex(MediaStore.MediaColumns._ID));
+                .getColumnIndex(MediaStore.MediaColumns._ID));
             Uri baseUri = Uri.parse("content://media/external/images/media");
             cursor.close();
             return Uri.withAppendedPath(baseUri, "" + id);
@@ -332,24 +337,24 @@ public class ApplicationUtils {
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Images.Media.DATA, filePath);
                 return context.getContentResolver().insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             } else {
                 return null;
             }
         }
-
     }
 
     public static Uri getImageInternalContentUri(Context context, java.io.File imageFile) {
         String filePath = imageFile.getAbsolutePath();
         Cursor cursor = context.getContentResolver().query(
-                MediaStore.Images.Media.INTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID},
-                MediaStore.Images.Media.DATA + "=? ",
-                new String[]{filePath}, null);
+            MediaStore.Images.Media.INTERNAL_CONTENT_URI,
+            new String[]{MediaStore.Images.Media._ID},
+            MediaStore.Images.Media.DATA + "=? ",
+            new String[]{filePath}, null);
+
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor
-                    .getColumnIndex(MediaStore.MediaColumns._ID));
+                .getColumnIndex(MediaStore.MediaColumns._ID));
             Uri baseUri = Uri.parse("content://media/internal/images/media");
             cursor.close();
             return Uri.withAppendedPath(baseUri, "" + id);
@@ -358,7 +363,7 @@ public class ApplicationUtils {
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Images.Media.DATA, filePath);
                 return context.getContentResolver().insert(
-                        MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
+                    MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
             } else {
                 return null;
             }
@@ -366,12 +371,13 @@ public class ApplicationUtils {
     }
 
     public static boolean isStoragePermissionGranted(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 23) {
+        if (Build.VERSION.SDK_INT >= VERSION_CODES.M) {
             if (activity.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED) {
                 return true;
             } else {
-                ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                ActivityCompat
+                    .requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -382,24 +388,18 @@ public class ApplicationUtils {
     public static void getAppDetailSettingIntent(Context context) {
         Intent localIntent = new Intent();
         localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        if (Build.VERSION.SDK_INT >= 9) {
-            localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-            localIntent.setData(Uri.fromParts("package", context.getPackageName(), null));
-        } else if (Build.VERSION.SDK_INT <= 8) {
-            localIntent.setAction(Intent.ACTION_VIEW);
-            localIntent.setClassName("com.android.settings", "com.android.settings.InstalledAppDetails");
-            localIntent.putExtra("com.android.settings.ApplicationPkgName", context.getPackageName());
-        }
+        localIntent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        localIntent.setData(Uri.fromParts("package", context.getPackageName(), null));
         context.startActivity(localIntent);
     }
 
-    public static String getUrlSuffix(String url) {
+    public static String getImageUrlSuffix(String url) {
 
         if (url.endsWith(".jpg")
-                || url.endsWith("jpeg")
-                || url.endsWith("png")
-                || url.endsWith("gif")
-                || url.endsWith("webp")) {
+            || url.endsWith("jpeg")
+            || url.endsWith("png")
+            || url.endsWith("gif")
+            || url.endsWith("webp")) {
             return url.substring(url.lastIndexOf('.'), url.length());
         }
         return "";

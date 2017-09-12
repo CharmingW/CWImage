@@ -123,6 +123,7 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         final View rootView = inflater.inflate(R.layout.fragment_image_search, container, false);
 
         mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
@@ -132,6 +133,7 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
         mImagesList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL) {
             @Override
             public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
+
                 LinearSmoothScroller scroller = new LinearSmoothScroller(getActivity()) {
                     @Override
                     protected int calculateTimeForScrolling(int dx) {
@@ -162,7 +164,6 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
             }
         });
 
-
         mRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_layout);
         SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -192,10 +193,17 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     private void loadMore() {
+
         if (mQImages.size() == 0) {
             return;
         }
+
         RecyclerView.LayoutManager layoutManager = mImagesList.getLayoutManager();
         if (layoutManager instanceof StaggeredGridLayoutManager) {
             StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
@@ -213,6 +221,7 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
         inflater.inflate(R.menu.menu_image_search, menu);
 
         SearchManager searchManager =

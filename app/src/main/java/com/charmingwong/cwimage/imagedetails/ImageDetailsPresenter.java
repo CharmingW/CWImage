@@ -1,5 +1,6 @@
 package com.charmingwong.cwimage.imagedetails;
 
+import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -8,7 +9,6 @@ import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.charmingwong.cwimage.BaseModel;
@@ -18,7 +18,6 @@ import com.charmingwong.cwimage.dao.DownloadImageDao;
 import com.charmingwong.cwimage.imagelibrary.CollectionImage;
 import com.charmingwong.cwimage.imagelibrary.DownloadImage;
 import com.charmingwong.cwimage.util.ApplicationUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -34,6 +33,7 @@ public class ImageDetailsPresenter implements ImageDetailsContract.Presenter {
 
     private static final String TAG = "ImageDetailsPresenter";
     private final ImageDetailsContract.View mView;
+    private Activity mActivity;
 
     private DaoSession mDaoSession;
 
@@ -45,6 +45,7 @@ public class ImageDetailsPresenter implements ImageDetailsContract.Presenter {
 
     @Override
     public void start() {
+        mActivity = ((Fragment) mView).getActivity();
     }
 
     @Override
@@ -61,12 +62,12 @@ public class ImageDetailsPresenter implements ImageDetailsContract.Presenter {
                     source = download(thumbUrl);
                 }
 
-                String urlSuffix = ApplicationUtils.getUrlSuffix(url);
-                String thumbUrlSuffix = ApplicationUtils.getUrlSuffix(thumbUrl);
+                String urlSuffix = ApplicationUtils.getImageUrlSuffix(url);
+                String thumbUrlSuffix = ApplicationUtils.getImageUrlSuffix(thumbUrl);
                 String suffix = "".equals(urlSuffix) ? thumbUrlSuffix : urlSuffix;
 
                 final File file = insertIntoGallery(source, suffix);
-                ((Fragment) mView).getActivity().runOnUiThread(new Runnable() {
+                mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mView.showDownloadResult(file);
@@ -93,12 +94,12 @@ public class ImageDetailsPresenter implements ImageDetailsContract.Presenter {
                     sharedImage = download(thumbUrl);
                 }
 
-                String urlSuffix = ApplicationUtils.getUrlSuffix(url);
-                String thumbUrlSuffix = ApplicationUtils.getUrlSuffix(thumbUrl);
+                String urlSuffix = ApplicationUtils.getImageUrlSuffix(url);
+                String thumbUrlSuffix = ApplicationUtils.getImageUrlSuffix(thumbUrl);
                 String suffix = "".equals(urlSuffix) ? thumbUrlSuffix : urlSuffix;
 
                 final File file = insertIntoGallery(sharedImage, suffix);
-                ((Fragment) mView).getActivity().runOnUiThread(new Runnable() {
+                mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (file == null) {
@@ -118,16 +119,21 @@ public class ImageDetailsPresenter implements ImageDetailsContract.Presenter {
             @Override
             public void run() {
                 File wallPaper = download(baseModel.getUrl());
-                WallpaperManager wpm = WallpaperManager.getInstance(((Fragment) mView).getActivity());
+                if (wallPaper == null) {
+                    return;
+                }
+
+                WallpaperManager wpm = WallpaperManager.getInstance(mActivity);
                 DisplayMetrics dm = Resources.getSystem().getDisplayMetrics();
                 int desiredMinimumWidth = dm.widthPixels;
                 int desiredMinimumHeight = dm.heightPixels;
                 Log.v("ss", "" + desiredMinimumWidth);
                 Log.v("ss", "" + desiredMinimumHeight);
                 wpm.suggestDesiredDimensions(desiredMinimumWidth, desiredMinimumHeight);
+
                 try {
                     wpm.setStream(new FileInputStream(wallPaper));
-                    ((Fragment) mView).getActivity().runOnUiThread(new Runnable() {
+                    mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             mView.showWallPagerResult(true);
@@ -137,7 +143,7 @@ public class ImageDetailsPresenter implements ImageDetailsContract.Presenter {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                ((Fragment) mView).getActivity().runOnUiThread(new Runnable() {
+                mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         mView.showWallPagerResult(false);
@@ -180,7 +186,7 @@ public class ImageDetailsPresenter implements ImageDetailsContract.Presenter {
             while (fis.read(buffer) != -1) {
                 fos.write(buffer, 0, buffer.length);
             }
-            ((Fragment) mView).getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
+            mActivity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(file)));
             return file;
         } catch (Exception e) {
             e.printStackTrace();
@@ -206,7 +212,7 @@ public class ImageDetailsPresenter implements ImageDetailsContract.Presenter {
     private File download(String url) {
 
         try {
-            return Glide.with(((Fragment) mView).getActivity())
+            return Glide.with(mActivity)
                     .load(url)
                     .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .get();

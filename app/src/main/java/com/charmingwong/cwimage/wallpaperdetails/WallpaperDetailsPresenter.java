@@ -142,8 +142,8 @@ public class WallpaperDetailsPresenter implements WallpaperDetailsContact.Presen
                     source = download(thumbUrl);
                 }
 
-                String urlSuffix = ApplicationUtils.getUrlSuffix(url);
-                String thumbUrlSuffix = ApplicationUtils.getUrlSuffix(thumbUrl);
+                String urlSuffix = ApplicationUtils.getImageUrlSuffix(url);
+                String thumbUrlSuffix = ApplicationUtils.getImageUrlSuffix(thumbUrl);
                 String suffix = "".equals(urlSuffix) ? thumbUrlSuffix : urlSuffix;
 
                 final File file = insertIntoGallery(source, suffix);
@@ -174,8 +174,8 @@ public class WallpaperDetailsPresenter implements WallpaperDetailsContact.Presen
                     sharedImage = download(thumbUrl);
                 }
 
-                String urlSuffix = ApplicationUtils.getUrlSuffix(url);
-                String thumbUrlSuffix = ApplicationUtils.getUrlSuffix(thumbUrl);
+                String urlSuffix = ApplicationUtils.getImageUrlSuffix(url);
+                String thumbUrlSuffix = ApplicationUtils.getImageUrlSuffix(thumbUrl);
                 String suffix = "".equals(urlSuffix) ? thumbUrlSuffix : urlSuffix;
 
                 final File file = insertIntoGallery(sharedImage, suffix);
