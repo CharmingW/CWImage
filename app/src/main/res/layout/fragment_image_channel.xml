@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.charmingwong.cwimage.VpSwipeRefreshLayout
+<com.charmingwong.cwimage.common.VpSwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/refresh_layout"
@@ -36,6 +36,6 @@
             app:srcCompat="@drawable/ic_vertical_align_top_white_24dp"/>
     </android.support.design.widget.CoordinatorLayout>
 
-</com.charmingwong.cwimage.VpSwipeRefreshLayout>
+</com.charmingwong.cwimage.common.VpSwipeRefreshLayout>
 
 

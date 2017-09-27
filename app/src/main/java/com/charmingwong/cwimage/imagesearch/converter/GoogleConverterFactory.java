@@ -55,7 +55,7 @@ public class GoogleConverterFactory extends Converter.Factory {
                 JSONArray jsonArray = new JSONArray(result);
                 String data = ((JSONArray) jsonArray.get(1)).getString(1);
                 Document document = Jsoup.parse(data);
-                Elements elements = document.getElementsByAttributeValue("class", "rg_di rg_bx rg_el ivg-i");
+                Elements elements = document.getElementsByAttributeValue("class", "rg_bx rg_di rg_el ivg-i");
 
                 List<QImage> qImages = new ArrayList<>(elements.size());
                 JSONObject image = new JSONObject();

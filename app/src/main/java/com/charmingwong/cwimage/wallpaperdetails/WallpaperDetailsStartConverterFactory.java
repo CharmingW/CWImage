@@ -2,19 +2,16 @@ package com.charmingwong.cwimage.wallpaperdetails;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.ResponseBody;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 
@@ -27,14 +24,11 @@ public class WallpaperDetailsStartConverterFactory extends Converter.Factory {
 
     private static final String TAG = "WallpaperDetailsStartConverterFactory";
 
-    private final String size;
-
-    private WallpaperDetailsStartConverterFactory(String size) {
-        this.size = size;
+    private WallpaperDetailsStartConverterFactory() {
     }
 
-    public static WallpaperDetailsStartConverterFactory create(String size) {
-        return new WallpaperDetailsStartConverterFactory(size);
+    public static WallpaperDetailsStartConverterFactory create() {
+        return new WallpaperDetailsStartConverterFactory();
     }
 
     @Nullable
@@ -50,6 +44,8 @@ public class WallpaperDetailsStartConverterFactory extends Converter.Factory {
             String result = value.string();
             List<String> urls = new ArrayList<>();
             Document document = Jsoup.parse(result);
+
+            String size = WallpaperDetailsStartApi.size;
 
             Element image;
             if ("".equals(size) || (!"".equals(size) && document.getElementById(size) == null)) {

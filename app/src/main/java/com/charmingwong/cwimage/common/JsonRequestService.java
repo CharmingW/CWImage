@@ -1,4 +1,4 @@
-package com.charmingwong.cwimage;
+package com.charmingwong.cwimage.common;
 
 import com.charmingwong.cwimage.imagechannel.ChannelImage;
 import com.charmingwong.cwimage.imagesearch.QImage;
@@ -25,7 +25,7 @@ import retrofit2.http.Url;
 
 public interface JsonRequestService {
 
-    @GET("search/acjson")
+    @GET("https://image.baidu.com/search/acjson")
     Call<List<QImage>> getBaiduImages(
             @Query("word") String word,
             @Query("tn") String tn,
@@ -36,7 +36,7 @@ public interface JsonRequestService {
             @Query("height") String height
     );
 
-    @GET("j")
+    @GET("http://image.so.com/j")
     Call<List<QImage>> getQH360Images(
             @Query("q") String query,
             @Query("sn") int sn,
@@ -45,7 +45,7 @@ public interface JsonRequestService {
             @Query("height") String height
     );
 
-    @GET("pics")
+    @GET("http://pic.sogou.com/pics")
     Call<List<QImage>> getSogouImages(
             @Query("query") String query,
             @Query("reqType") String reqType,
@@ -55,7 +55,7 @@ public interface JsonRequestService {
             @Query("dm") int dm
     );
 
-    @GET("getpic")
+    @GET("http://image.chinaso.com/getpic")
     Call<List<QImage>> getChinasoImages(
             @Query("q") String query,
             @Query("st") int start,
@@ -67,7 +67,7 @@ public interface JsonRequestService {
     );
 
     @Headers("user-agent:Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19")
-    @GET("search")
+    @GET("https://www.google.com/search")
     Call<List<QImage>> getGoogleImage(
             @Query("hl") String hl,
             @Query("asearch") String asearch,
@@ -78,7 +78,7 @@ public interface JsonRequestService {
             @Query("tbs") String tbs
     );
 
-    @GET("zj")
+    @GET("http://image.so.com/zj")
     Call<List<ChannelImage>> getChannelImages(
             @Query("ch") String channel,
             @Query("sn") int sn,
@@ -89,7 +89,7 @@ public interface JsonRequestService {
             @Query("temp") int temp
     );
 
-    @GET("suggest/word")
+    @GET("http://sug.image.so.com/suggest/word")
     Call<List<ImageSearchSuggestion>> getSearchSuggestions(
             @Query("callback") String callback,
             @Query("encodein") String encodeIn,
@@ -98,23 +98,23 @@ public interface JsonRequestService {
     );
 
     @Headers("Cache-Control:max-age=86400")
-    @GET("/")
+    @GET("http://image.baidu.com/")
     Call<List<HotSearch>> getHotSearches();
 
-    @POST("n/image")
+    @POST("http://image.baidu.com/n/image")
     Call<String> postImage(
             @Body RequestBody image,
             @Query("fr") String from,
             @Query("needJson") boolean needJson
     );
 
-    @GET("n/similar")
+    @GET("http://image.baidu.com/n/similar")
     Call<List<SoImage>> getSoImages(
             @Query("queryImageUrl") String url,
             @Query("pn") int pn,
             @Query("rn") int rn);
 
-    @GET()
+    @GET
     Call<List<WallpaperCover>> getWallPaperCover(
             @Url String url
     );

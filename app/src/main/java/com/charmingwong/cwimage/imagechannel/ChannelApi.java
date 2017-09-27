@@ -2,15 +2,12 @@ package com.charmingwong.cwimage.imagechannel;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-
-import com.charmingwong.cwimage.JsonRequestService;
-
+import com.charmingwong.cwimage.common.ApiManager;
+import com.charmingwong.cwimage.common.JsonRequestService;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by CharmingWong on 2017/5/15.
@@ -44,11 +41,7 @@ public class ChannelApi {
     }
 
     private ChannelApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(ChannelImageJsonConverterFactory.create())
-            .build();
-        jsonRequestService = retrofit.create(JsonRequestService.class);
+        jsonRequestService = ApiManager.getInstance().getJsonRequestService(ChannelImageJsonConverterFactory.create());
     }
 
     private QueryListener queryListener;

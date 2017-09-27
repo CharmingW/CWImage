@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.charmingwong.cwimage.ImageDialog;
+import com.charmingwong.cwimage.common.ImageDialog;
 import com.charmingwong.cwimage.R;
 import com.charmingwong.cwimage.imagedetails.ImageDetailsActivity;
 import com.charmingwong.cwimage.util.ApplicationUtils;

@@ -2,13 +2,13 @@ package com.charmingwong.cwimage.wallpaperdetails;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-import com.charmingwong.cwimage.JsonRequestService;
+import com.charmingwong.cwimage.common.ApiManager;
+import com.charmingwong.cwimage.common.JsonRequestService;
 import java.util.List;
 import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by CharmingWong on 2017/6/9.
@@ -24,22 +24,18 @@ public class WallpaperDetailsStartApi {
 
     private static JsonRequestService jsonRequestService;
 
+    private int mType;
+
+    public static String size;
 
     public static WallpaperDetailsStartApi newInstance(String size, int type) {
         return new WallpaperDetailsStartApi(size, type);
     }
 
     private WallpaperDetailsStartApi(String size, int type) {
-        Retrofit.Builder builder = new Retrofit.Builder();
-        builder.addConverterFactory(WallpaperDetailsStartConverterFactory.create(size));
-
-        if (type == 0) {
-            builder.baseUrl(BASE_PHONE_URL);
-        } else {
-            builder.baseUrl(BASE_DESKTOP_URL);
-        }
-        Retrofit retrofit = builder.build();
-        jsonRequestService = retrofit.create(JsonRequestService.class);
+        mType = type;
+        WallpaperDetailsStartApi.size = size;
+        jsonRequestService = ApiManager.getInstance().getJsonRequestService(WallpaperDetailsStartConverterFactory.create());
     }
 
     public interface QueryListener {
@@ -68,7 +64,13 @@ public class WallpaperDetailsStartApi {
     }
 
     private void searchImages(final String url) {
-        Call<List<String>> call = jsonRequestService.getWallpaperStart(url);
+        String baseUrl;
+        if (mType == 0) {
+            baseUrl = BASE_PHONE_URL;
+        } else {
+            baseUrl = BASE_DESKTOP_URL;
+        }
+        Call<List<String>> call = jsonRequestService.getWallpaperStart(baseUrl + url);
         call.enqueue(new Callback<List<String>>() {
             @Override
             public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
@@ -78,7 +80,7 @@ public class WallpaperDetailsStartApi {
                     mLastQueryResult = new QueryResult(urls);
                     lastQuery = url;
                 } else {
-                    Log.i(TAG, "onResponse: responseCode = " + response.code());
+                    Log.i(TAG, "onResponse:responseCode=" + response.code());
                     mQueryListener.onSearchFailed();
                 }
             }

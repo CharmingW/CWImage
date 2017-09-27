@@ -103,7 +103,7 @@
         </activity>
 
         <meta-date
-            android:name="com.charmingwong.cwimage.GlideConfigModule"
+            android:name="com.charmingwong.cwimage.config.GlideConfigModule"
             android:value="GlideModule"/>
     </application>
 

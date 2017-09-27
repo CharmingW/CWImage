@@ -1,4 +1,4 @@
-package com.charmingwong.cwimage;
+package com.charmingwong.cwimage.common;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.charmingwong.cwimage.R;
 import com.charmingwong.cwimage.base.BaseModel;
 import com.charmingwong.cwimage.util.ApplicationUtils;
 

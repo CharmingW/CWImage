@@ -2,7 +2,8 @@ package com.charmingwong.cwimage.search.api;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-import com.charmingwong.cwimage.JsonRequestService;
+import com.charmingwong.cwimage.common.ApiManager;
+import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.search.ImageSearchSuggestion;
 import com.charmingwong.cwimage.search.converter.SuggestionsJsonConverterFactory;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by CharmingWong on 2017/5/21.
@@ -36,11 +36,7 @@ public class SuggestionsApi {
     }
 
     private SuggestionsApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(SuggestionsJsonConverterFactory.create())
-                .baseUrl(BASE_URL)
-                .build();
-        jsonRequestService = retrofit.create(JsonRequestService.class);
+        jsonRequestService = ApiManager.getInstance().getJsonRequestService(SuggestionsJsonConverterFactory.create());
     }
 
     private SearchSuggestionsListener mSearchSuggestionsListener;

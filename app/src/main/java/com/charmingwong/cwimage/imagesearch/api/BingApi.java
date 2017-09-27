@@ -2,18 +2,15 @@ package com.charmingwong.cwimage.imagesearch.api;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-
-import com.charmingwong.cwimage.JsonRequestService;
+import com.charmingwong.cwimage.common.ApiManager;
+import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.imagesearch.QImage;
 import com.charmingwong.cwimage.imagesearch.converter.BingConverterFactory;
-
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by CharmingWong on 2017/5/31.
@@ -36,11 +33,7 @@ public class BingApi implements BaseApi {
     }
 
     private BingApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(BingConverterFactory.create())
-            .build();
-        jsonRequestService = retrofit.create(JsonRequestService.class);
+        jsonRequestService = ApiManager.getInstance().getJsonRequestService(BingConverterFactory.create());
     }
 
     private QueryListener mQueryListener;
@@ -71,11 +64,13 @@ public class BingApi implements BaseApi {
     private void searchImages(final int requestCode, final String query, final int index) {
         Log.i(TAG, "searchImages: " + index);
         Call<List<QImage>> call;
+        String url;
         if (index == 0) {
-            call = jsonRequestService.getBingImages("images/async?q=" + query + "&first=0&count=40&qft=" + mCustomSize);
+            url = BASE_URL + "images/async?q=" + query + "&first=0&count=40&qft=" + mCustomSize;
         } else {
-            call = jsonRequestService.getBingImages(NEXT_URL);
+            url = BASE_URL + NEXT_URL;
         }
+        call = jsonRequestService.getBingImages(url);
         call.enqueue(new Callback<List<QImage>>() {
             @Override
             public void onResponse(@NonNull Call<List<QImage>> call, @NonNull Response<List<QImage>> response) {

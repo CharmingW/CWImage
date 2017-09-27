@@ -1,4 +1,4 @@
-package com.charmingwong.cwimage;
+package com.charmingwong.cwimage.config;
 
 import android.content.Context;
 

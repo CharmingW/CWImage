@@ -17,8 +17,8 @@ android {
         applicationId "com.charmingwong.cwimage"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 10002
-        versionName "1.0.2_alpha"
+        versionCode 10003
+        versionName "1.0.3_alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

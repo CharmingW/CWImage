@@ -2,14 +2,14 @@ package com.charmingwong.cwimage.search.api;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-import com.charmingwong.cwimage.JsonRequestService;
+import com.charmingwong.cwimage.common.ApiManager;
+import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.search.converter.HotSearchesConverterFactory;
 import com.charmingwong.cwimage.search.model.HotSearch;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by CharmingWong on 2017/6/2.
@@ -27,11 +27,7 @@ public class HotSearchApi {
     }
 
     private HotSearchApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(HotSearchesConverterFactory.create())
-                .baseUrl(BASE_URL)
-                .build();
-        jsonRequestService = retrofit.create(JsonRequestService.class);
+        jsonRequestService = ApiManager.getInstance().getJsonRequestService(HotSearchesConverterFactory.create());
     }
 
     private HotSearchesListener mHotSearchesListener;

@@ -3,21 +3,17 @@ package com.charmingwong.cwimage.imagesearch.converter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-
 import com.charmingwong.cwimage.imagesearch.ImageFinder;
 import com.charmingwong.cwimage.imagesearch.QImage;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.ResponseBody;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 

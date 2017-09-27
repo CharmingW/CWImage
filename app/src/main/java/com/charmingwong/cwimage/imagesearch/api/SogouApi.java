@@ -2,18 +2,15 @@ package com.charmingwong.cwimage.imagesearch.api;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-
-import com.charmingwong.cwimage.JsonRequestService;
+import com.charmingwong.cwimage.common.ApiManager;
+import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.imagesearch.QImage;
 import com.charmingwong.cwimage.imagesearch.converter.SogouConverterFactory;
-
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by CharmingWong on 2017/5/30.
@@ -41,11 +38,10 @@ public class SogouApi implements BaseApi {
     }
 
     private SogouApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(SogouConverterFactory.create())
-                .build();
-        jsonRequestService = retrofit.create(JsonRequestService.class);
+        jsonRequestService
+            = ApiManager
+            .getInstance()
+            .getJsonRequestService(SogouConverterFactory.create());
     }
 
     private QueryListener mQueryListener;

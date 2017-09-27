@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
-import android.util.Log;
+import com.charmingwong.cwimage.config.MainLooperPrinter;
 import com.charmingwong.cwimage.util.ApplicationUtils;
 import com.github.moduth.blockcanary.BlockCanary;
 import java.io.File;

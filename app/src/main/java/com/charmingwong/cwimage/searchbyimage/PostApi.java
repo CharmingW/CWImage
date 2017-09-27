@@ -1,17 +1,14 @@
 package com.charmingwong.cwimage.searchbyimage;
 
 import android.support.annotation.NonNull;
-
-import com.charmingwong.cwimage.JsonRequestService;
-
+import com.charmingwong.cwimage.common.ApiManager;
+import com.charmingwong.cwimage.common.JsonRequestService;
 import java.io.File;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by CharmingWong on 2017/5/23.
@@ -32,11 +29,7 @@ public class PostApi {
     }
 
     private PostApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(PostJsonConverterFactory.create())
-                .build();
-        jsonRequestService = retrofit.create(JsonRequestService.class);
+        jsonRequestService = ApiManager.getInstance().getJsonRequestService(PostJsonConverterFactory.create());
     }
 
     private QueryListener mQueryListener;

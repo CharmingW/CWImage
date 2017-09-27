@@ -2,19 +2,16 @@ package com.charmingwong.cwimage.imagesearch.api;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-
-import com.charmingwong.cwimage.JsonRequestService;
+import com.charmingwong.cwimage.common.ApiManager;
+import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.imagesearch.ImageSearchPresenter;
-import com.charmingwong.cwimage.imagesearch.converter.QHConverterFactory;
 import com.charmingwong.cwimage.imagesearch.QImage;
-
+import com.charmingwong.cwimage.imagesearch.converter.QHConverterFactory;
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * A class for interfacing with Flickr's http API.
@@ -37,11 +34,7 @@ public class QHApi implements BaseApi {
     }
 
     private QHApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(QHConverterFactory.create())
-                .build();
-        jsonRequestService = retrofit.create(JsonRequestService.class);
+        jsonRequestService = ApiManager.getInstance().getJsonRequestService(QHConverterFactory.create());
     }
 
     private QueryListener mQueryListener;

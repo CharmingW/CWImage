@@ -77,7 +77,7 @@ public class WallPaperTypesAdapter extends BaseAdapter {
         }
     }
 
-    static class ViewHolder {
+    private static class ViewHolder {
 
         TextView type;
 

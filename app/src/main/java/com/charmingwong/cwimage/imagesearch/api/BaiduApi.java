@@ -2,19 +2,16 @@ package com.charmingwong.cwimage.imagesearch.api;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-
-import com.charmingwong.cwimage.JsonRequestService;
+import com.charmingwong.cwimage.common.ApiManager;
+import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.imagesearch.ImageSearchPresenter;
 import com.charmingwong.cwimage.imagesearch.QImage;
 import com.charmingwong.cwimage.imagesearch.converter.BaiduConverterFactory;
-
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 /**
  * Created by CharmingWong on 2017/5/31.
@@ -34,7 +31,6 @@ public class BaiduApi implements BaseApi {
 
     private String mHeight;
 
-
     private static JsonRequestService jsonRequestService;
 
     public static BaiduApi newInstance() {
@@ -42,11 +38,7 @@ public class BaiduApi implements BaseApi {
     }
 
     private BaiduApi() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(BaiduConverterFactory.create())
-                .build();
-        jsonRequestService = retrofit.create(JsonRequestService.class);
+        jsonRequestService = ApiManager.getInstance().getJsonRequestService(BaiduConverterFactory.create());
     }
 
     private QueryListener mQueryListener;
