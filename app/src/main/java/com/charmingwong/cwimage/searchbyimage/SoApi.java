@@ -1,11 +1,9 @@
 package com.charmingwong.cwimage.searchbyimage;
 
 import android.support.annotation.NonNull;
-
+import android.util.Log;
 import com.charmingwong.cwimage.JsonRequestService;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +22,7 @@ public class SoApi {
     private static final String BASE_URL = "http://image.baidu.com/";
 
     private static final int RN = 40;
+    private static final String TAG = "SoApi";
 
     private static JsonRequestService jsonRequestService;
 
@@ -56,9 +55,10 @@ public class SoApi {
             @Override
             public void onResponse(@NonNull Call<List<SoImage>> call, @NonNull Response<List<SoImage>> response) {
                 List<SoImage> soImages = response.body();
-                if (soImages != null) {
+                if (response.isSuccessful() && soImages != null) {
                     mQueryListener.onSearchCompleted(requestCode, soImages);
                 } else {
+                    Log.i(TAG, "onResponse: responseCode = " + response.code());
                     mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
                 }
             }

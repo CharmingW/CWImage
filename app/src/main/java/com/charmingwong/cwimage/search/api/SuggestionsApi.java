@@ -1,14 +1,12 @@
 package com.charmingwong.cwimage.search.api;
 
 import android.support.annotation.NonNull;
-
+import android.util.Log;
 import com.charmingwong.cwimage.JsonRequestService;
 import com.charmingwong.cwimage.search.ImageSearchSuggestion;
 import com.charmingwong.cwimage.search.converter.SuggestionsJsonConverterFactory;
-
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -29,6 +27,7 @@ public class SuggestionsApi {
     private static final String ENCODE_IN = "utf-8";
 
     private static final String ENCODE_OUT = "utf-8";
+    private static final String TAG = "SuggestionsApi";
 
     private static JsonRequestService jsonRequestService;
 
@@ -68,11 +67,12 @@ public class SuggestionsApi {
             @Override
             public void onResponse(@NonNull Call<List<ImageSearchSuggestion>> call, @NonNull Response<List<ImageSearchSuggestion>> response) {
                 List<ImageSearchSuggestion> suggestions = response.body();
-                if (suggestions != null) {
+                if (response.isSuccessful() && suggestions != null) {
                     mSearchSuggestionsListener.onSearchCompleted(suggestions);
                     mLastSearchResult = new SearchResult(suggestions);
                     lastQuery = query;
                 } else {
+                    Log.i(TAG, "onResponse: responseCode = " + response.code());
                     mSearchSuggestionsListener.onSearchFailed(new Exception("请求太频繁，后台返回的 json 为空"));
                 }
             }

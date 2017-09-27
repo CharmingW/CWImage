@@ -78,9 +78,10 @@ public class ChannelApi {
                 @NonNull Response<List<ChannelImage>> response) {
                 Log.d(TAG, "onResponse: ");
                 List<ChannelImage> images = response.body();
-                if (images != null) {
+                if (response.isSuccessful() && images != null) {
                     queryListener.onSearchCompleted(requestCode, channel, images);
                 } else {
+                    Log.i(TAG, "onResponse: responseCode = " + response.code());
                     Log.i(TAG, "onResponse: 请求太频繁，后台返回的 json 的 list 为空");
                     queryListener.onSearchFailed(requestCode, ERROR_JSON, channel);
                 }

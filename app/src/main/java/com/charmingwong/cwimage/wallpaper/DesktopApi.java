@@ -1,12 +1,10 @@
 package com.charmingwong.cwimage.wallpaper;
 
 import android.support.annotation.NonNull;
-
+import android.util.Log;
 import com.charmingwong.cwimage.JsonRequestService;
-
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,11 +66,12 @@ public class DesktopApi {
             @Override
             public void onResponse(@NonNull Call<List<WallpaperCover>> call, @NonNull Response<List<WallpaperCover>> response) {
                 List<WallpaperCover> wallpaperCovers = response.body();
-                if (wallpaperCovers != null) {
+                if (response.isSuccessful() && wallpaperCovers != null) {
                     mQueryListener.onSearchCompleted(wallpaperCovers);
                     mLastQueryResult = new QueryResult(wallpaperCovers);
                     lastQuery = path;
                 } else {
+                    Log.i(TAG, "onResponse: responseCode = " + response.code());
                     mQueryListener.onSearchFailed();
                 }
             }

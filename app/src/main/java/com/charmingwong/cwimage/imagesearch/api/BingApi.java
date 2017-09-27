@@ -37,9 +37,9 @@ public class BingApi implements BaseApi {
 
     private BingApi() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(BingConverterFactory.create())
-                .build();
+            .baseUrl(BASE_URL)
+            .addConverterFactory(BingConverterFactory.create())
+            .build();
         jsonRequestService = retrofit.create(JsonRequestService.class);
     }
 
@@ -72,7 +72,7 @@ public class BingApi implements BaseApi {
         Log.i(TAG, "searchImages: " + index);
         Call<List<QImage>> call;
         if (index == 0) {
-             call = jsonRequestService.getBingImages("images/async?q=" + query + "&first=0&count=40&qft=" + mCustomSize);
+            call = jsonRequestService.getBingImages("images/async?q=" + query + "&first=0&count=40&qft=" + mCustomSize);
         } else {
             call = jsonRequestService.getBingImages(NEXT_URL);
         }
@@ -80,11 +80,12 @@ public class BingApi implements BaseApi {
             @Override
             public void onResponse(@NonNull Call<List<QImage>> call, @NonNull Response<List<QImage>> response) {
                 List<QImage> QImages = response.body();
-                if (QImages != null) {
+                if (response.isSuccessful() && QImages != null) {
                     mQueryListener.onSearchCompleted(requestCode, QImages);
                     mLastQueryResult = new QueryResult(QImages);
                     lastQuery = query + index;
                 } else {
+                    Log.i(TAG, "onResponse: responseCode = " + response.code());
                     Log.i(TAG, "onResponse: json null");
                     mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
                 }
@@ -98,6 +99,7 @@ public class BingApi implements BaseApi {
     }
 
     private static class QueryResult {
+
         private final List<QImage> mQImages;
 
         public QueryResult(List<QImage> results) {

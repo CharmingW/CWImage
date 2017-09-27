@@ -16,9 +16,9 @@ android {
     defaultConfig {
         applicationId "com.charmingwong.cwimage"
         minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 10000
-        versionName "1.0.0_alpha"
+        targetSdkVersion 25
+        versionCode 10001
+        versionName "1.0.1_alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

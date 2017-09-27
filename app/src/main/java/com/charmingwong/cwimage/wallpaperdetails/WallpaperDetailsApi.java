@@ -1,11 +1,9 @@
 package com.charmingwong.cwimage.wallpaperdetails;
 
 import android.support.annotation.NonNull;
-
+import android.util.Log;
 import com.charmingwong.cwimage.JsonRequestService;
-
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,11 +71,12 @@ public class WallpaperDetailsApi {
             @Override
             public void onResponse(@NonNull Call<Wallpaper> call, @NonNull Response<Wallpaper> response) {
                 Wallpaper wallpaper = response.body();
-                if (wallpaper != null) {
+                if (response.isSuccessful() && wallpaper != null) {
                     mQueryListener.onSearchCompleted(position, wallpaper);
                     mLastQueryResult = new QueryResult(wallpaper);
                     lastQuery = url;
                 } else {
+                    Log.i(TAG, "onResponse: responseCode = " + response.code());
                     mQueryListener.onSearchFailed();
                 }
             }

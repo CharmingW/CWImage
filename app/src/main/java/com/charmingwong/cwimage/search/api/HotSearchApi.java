@@ -1,13 +1,11 @@
 package com.charmingwong.cwimage.search.api;
 
 import android.support.annotation.NonNull;
-
+import android.util.Log;
 import com.charmingwong.cwimage.JsonRequestService;
 import com.charmingwong.cwimage.search.converter.HotSearchesConverterFactory;
 import com.charmingwong.cwimage.search.model.HotSearch;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -20,6 +18,7 @@ import retrofit2.Retrofit;
 public class HotSearchApi {
 
     private static final String BASE_URL = "http://image.baidu.com/";
+    private static final String TAG = "HotSearchApi";
 
     private static JsonRequestService jsonRequestService;
 
@@ -57,10 +56,11 @@ public class HotSearchApi {
             @Override
             public void onResponse(@NonNull Call<List<HotSearch>> call, @NonNull Response<List<HotSearch>> response) {
                 List<HotSearch> hotSearches = response.body();
-                if (hotSearches != null) {
+                if (response.isSuccessful() && hotSearches != null) {
                     mHotSearchesListener.onSearchCompleted(hotSearches);
                     mLastSearchResult = new SearchResult(hotSearches);
                 } else {
+                    Log.i(TAG, "onResponse: responseCode = " + response.code());
                     mHotSearchesListener.onSearchFailed(new Exception("无法正确获取热门搜索数据"));
                 }
             }

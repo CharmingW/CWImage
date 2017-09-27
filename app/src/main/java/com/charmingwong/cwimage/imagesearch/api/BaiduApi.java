@@ -90,11 +90,12 @@ public class BaiduApi implements BaseApi {
             @Override
             public void onResponse(@NonNull Call<List<QImage>> call, @NonNull Response<List<QImage>> response) {
                 List<QImage> QImages = response.body();
-                if (QImages != null) {
+                if (response.isSuccessful() &&QImages != null) {
                     mQueryListener.onSearchCompleted(requestCode, QImages);
                     mLastQueryResult = new QueryResult(QImages);
                     lastQuery = query + index;
                 } else {
+                    Log.i(TAG, "onResponse: responseCode = " + response.code());
                     Log.i(TAG, "onResponse: json null");
                     mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
                 }
