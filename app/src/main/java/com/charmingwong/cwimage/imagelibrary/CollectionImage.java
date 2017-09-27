@@ -2,7 +2,7 @@ package com.charmingwong.cwimage.imagelibrary;
 
 import android.os.Parcel;
 
-import com.charmingwong.cwimage.BaseModel;
+import com.charmingwong.cwimage.base.BaseModel;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;

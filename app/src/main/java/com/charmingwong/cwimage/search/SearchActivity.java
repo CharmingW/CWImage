@@ -1,7 +1,7 @@
 package com.charmingwong.cwimage.search;
 
 import android.os.Bundle;
-import com.charmingwong.cwimage.BaseActivity;
+import com.charmingwong.cwimage.base.BaseActivity;
 import com.charmingwong.cwimage.R;
 import com.charmingwong.cwimage.dao.DaoManager;
 import com.charmingwong.cwimage.util.ActivityUtils;

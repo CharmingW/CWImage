@@ -394,7 +394,8 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
         public static ChannelItemFragment newInstance(int position,
             ChangeChannelImagesCountListener listener) {
-            ChannelItemFragment fragment = new ChannelItemFragment(listener);
+            ChannelItemFragment fragment = new ChannelItemFragment();
+            fragment.setListener(listener);
             Bundle args = new Bundle();
             args.putInt("num", position);
             args.putInt("image_last_index", 0);
@@ -403,12 +404,11 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
             return fragment;
         }
 
-        public ChannelItemFragment(ChangeChannelImagesCountListener listener) {
-            super();
-            mListener = listener;
+        public ChannelItemFragment() {
         }
 
-        public ChannelItemFragment() {
+        public void setListener(ChangeChannelImagesCountListener listener) {
+            mListener = listener;
         }
 
         @Override
@@ -545,7 +545,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
                     int position = (int) v.findViewById(R.id.resolution).getTag();
 
                     FragmentManager fm = ((AppCompatActivity) mContext).getSupportFragmentManager();
-                    final ImageDialog dialog = new ImageDialog(mChannelImages.get(position));
+                    final ImageDialog dialog = ImageDialog.newInstance(mChannelImages.get(position));
 
                     dialog.show(fm, "dialog");
 

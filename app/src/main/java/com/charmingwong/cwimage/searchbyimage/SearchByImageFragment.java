@@ -285,7 +285,7 @@ public class SearchByImageFragment extends Fragment implements SearchByImageCont
                     int position = (int) v.findViewById(R.id.resolution).getTag();
 
                     FragmentManager fm = (getActivity().getSupportFragmentManager());
-                    final ImageDialog dialog = new ImageDialog(mSoImages.get(position));
+                    final ImageDialog dialog = ImageDialog.newInstance(mSoImages.get(position));
 
                     dialog.show(fm, "dialog");
 

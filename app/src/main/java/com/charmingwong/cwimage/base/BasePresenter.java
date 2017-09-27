@@ -1,4 +1,4 @@
-package com.charmingwong.cwimage;
+package com.charmingwong.cwimage.base;
 
 public interface BasePresenter {
 

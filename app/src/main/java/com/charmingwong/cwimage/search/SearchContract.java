@@ -1,7 +1,7 @@
 package com.charmingwong.cwimage.search;
 
-import com.charmingwong.cwimage.BasePresenter;
-import com.charmingwong.cwimage.BaseView;
+import com.charmingwong.cwimage.base.BasePresenter;
+import com.charmingwong.cwimage.base.BaseView;
 import com.charmingwong.cwimage.imagelibrary.CollectionTag;
 import com.charmingwong.cwimage.search.model.HotSearch;
 import com.charmingwong.cwimage.search.model.SearchRecord;

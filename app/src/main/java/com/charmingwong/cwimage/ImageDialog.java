@@ -14,6 +14,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.charmingwong.cwimage.base.BaseModel;
 import com.charmingwong.cwimage.util.ApplicationUtils;
 
 /**
@@ -24,8 +25,21 @@ public class ImageDialog extends DialogFragment {
 
     private BaseModel mImage;
 
-    public ImageDialog(BaseModel baseModel) {
-        mImage = baseModel;
+    public ImageDialog() {
+    }
+
+    public static ImageDialog newInstance(BaseModel baseModel) {
+        ImageDialog imageDialog = new ImageDialog();
+        Bundle args = new Bundle();
+        args.putSerializable("images", baseModel);
+        imageDialog.setArguments(args);
+        return imageDialog;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mImage = (BaseModel) getArguments().getSerializable("images");
     }
 
     @Nullable

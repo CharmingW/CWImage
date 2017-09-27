@@ -495,7 +495,7 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
                     int position = (int) v.findViewById(R.id.resolution).getTag();
 
                     FragmentManager fm = (getActivity().getSupportFragmentManager());
-                    final ImageDialog dialog = new ImageDialog(mQImages.get(position));
+                    final ImageDialog dialog = ImageDialog.newInstance(mQImages.get(position));
 
                     dialog.show(fm, "dialog");
 

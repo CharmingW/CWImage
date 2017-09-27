@@ -1,7 +1,7 @@
 package com.charmingwong.cwimage.localview;
 
-import com.charmingwong.cwimage.BasePresenter;
-import com.charmingwong.cwimage.BaseView;
+import com.charmingwong.cwimage.base.BasePresenter;
+import com.charmingwong.cwimage.base.BaseView;
 
 /**
  * Created by CharmingWong on 2017/5/12.

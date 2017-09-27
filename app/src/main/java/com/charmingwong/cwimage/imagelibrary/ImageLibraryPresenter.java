@@ -1,6 +1,6 @@
 package com.charmingwong.cwimage.imagelibrary;
 
-import com.charmingwong.cwimage.BaseModel;
+import com.charmingwong.cwimage.base.BaseModel;
 import com.charmingwong.cwimage.dao.CollectionImageDao;
 import com.charmingwong.cwimage.dao.CollectionTagDao;
 import com.charmingwong.cwimage.dao.DaoSession;

@@ -8,7 +8,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.charmingwong.cwimage.BaseActivity;
+import com.charmingwong.cwimage.base.BaseActivity;
 import com.charmingwong.cwimage.R;
 import com.charmingwong.cwimage.util.ActivityUtils;
 

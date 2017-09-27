@@ -2,7 +2,7 @@ package com.charmingwong.cwimage.searchbyimage;
 
 import android.os.Parcel;
 
-import com.charmingwong.cwimage.BaseModel;
+import com.charmingwong.cwimage.base.BaseModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;

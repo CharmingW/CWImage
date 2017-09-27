@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
-import com.charmingwong.cwimage.BaseModel;
+import com.charmingwong.cwimage.base.BaseModel;
 import com.charmingwong.cwimage.dao.CollectionImageDao;
 import com.charmingwong.cwimage.dao.DaoSession;
 import com.charmingwong.cwimage.dao.DownloadImageDao;

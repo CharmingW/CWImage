@@ -2,9 +2,9 @@ package com.charmingwong.cwimage.imagedetails;
 
 import android.net.Uri;
 
-import com.charmingwong.cwimage.BaseModel;
-import com.charmingwong.cwimage.BasePresenter;
-import com.charmingwong.cwimage.BaseView;
+import com.charmingwong.cwimage.base.BaseModel;
+import com.charmingwong.cwimage.base.BasePresenter;
+import com.charmingwong.cwimage.base.BaseView;
 
 import java.io.File;
 

@@ -1,12 +1,13 @@
-package com.charmingwong.cwimage;
+package com.charmingwong.cwimage.base;
 
 import android.os.Parcelable;
+import java.util.ArrayList;
 
 /**
  * Created by CharmingWong on 2017/5/25.
  */
 
-public abstract class BaseModel implements Parcelable {
+public abstract class BaseModel extends ArrayList<Parcelable> implements Parcelable {
 
     public String url;
 

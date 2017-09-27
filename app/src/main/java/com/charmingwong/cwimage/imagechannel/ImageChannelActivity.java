@@ -28,7 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.charmingwong.cwimage.App;
-import com.charmingwong.cwimage.BaseActivity;
+import com.charmingwong.cwimage.base.BaseActivity;
 import com.charmingwong.cwimage.R;
 import com.charmingwong.cwimage.imagelibrary.ImageLibraryActivity;
 import com.charmingwong.cwimage.search.SearchActivity;

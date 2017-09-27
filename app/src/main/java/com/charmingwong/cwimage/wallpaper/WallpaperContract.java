@@ -1,7 +1,7 @@
 package com.charmingwong.cwimage.wallpaper;
 
-import com.charmingwong.cwimage.BasePresenter;
-import com.charmingwong.cwimage.BaseView;
+import com.charmingwong.cwimage.base.BasePresenter;
+import com.charmingwong.cwimage.base.BaseView;
 
 import java.util.List;
 

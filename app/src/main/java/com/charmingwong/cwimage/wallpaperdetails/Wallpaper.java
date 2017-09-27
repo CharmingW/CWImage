@@ -3,7 +3,7 @@ package com.charmingwong.cwimage.wallpaperdetails;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.charmingwong.cwimage.BaseModel;
+import com.charmingwong.cwimage.base.BaseModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
