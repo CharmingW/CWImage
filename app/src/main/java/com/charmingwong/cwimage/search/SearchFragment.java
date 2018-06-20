@@ -17,7 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -29,7 +28,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
@@ -43,7 +41,6 @@ import com.charmingwong.cwimage.search.model.HotSearch;
 import com.charmingwong.cwimage.search.model.SearchRecord;
 import com.charmingwong.cwimage.searchbyimage.SearchByImageActivity;
 import com.charmingwong.cwimage.util.ApplicationUtils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,7 +124,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
             }
         };
 
-        hotList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        hotList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL));
         hotList.addItemDecoration(itemDecorationHot);
 
         RecyclerView.ItemDecoration itemDecorationTag = new RecyclerView.ItemDecoration() {
@@ -151,7 +148,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
         RecyclerView tagList = (RecyclerView) rootView.findViewById(R.id.tag_list);
         mTagsListAdapter = new TagsListAdapter();
         tagList.setAdapter(mTagsListAdapter);
-        tagList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL));
+        tagList.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL));
         tagList.addItemDecoration(itemDecorationTag);
 
         return rootView;

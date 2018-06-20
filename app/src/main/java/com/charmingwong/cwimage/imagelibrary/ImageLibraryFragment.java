@@ -84,7 +84,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_image_library, container, false);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.libraryPager);
+        mViewPager = (ViewPager) rootView.findViewById(R.id.channelPager);
         mViewPager.setAdapter(mImageLibraryAdapter);
         mViewPager.setOffscreenPageLimit(2);
         int current = getArguments().getInt("page", 0);
@@ -295,7 +295,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                     }
                 });
             } else {
-                recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
                     @Override
                     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                         int density = ApplicationUtils.getDisplayDensity();

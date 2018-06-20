@@ -22,7 +22,7 @@ public class WallpaperActivity extends BaseActivity {
 
         ImageView imageView= (ImageView) findViewById(R.id.bar_image);
         Glide.with(this)
-                .load(R.drawable.ic_bar_2)
+                .load(R.drawable.ic_bar)
                 .into(imageView);
 
         WallpaperFragment fragment = (WallpaperFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);

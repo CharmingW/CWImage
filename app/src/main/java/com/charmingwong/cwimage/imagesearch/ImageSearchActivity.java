@@ -51,7 +51,7 @@ public class ImageSearchActivity extends BaseActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
         }
 
-        BaseApi api = null;
+        BaseApi api;
 
         int type = bundle.getInt("api", ImageFinder.QH360);
         switch (type) {
@@ -74,6 +74,7 @@ public class ImageSearchActivity extends BaseActivity {
                 api = GoogleApi.newInstance();
                 break;
             default:
+                api = QHApi.newInstance();
                 break;
         }
 

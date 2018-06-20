@@ -28,7 +28,7 @@ public class SearchByImageActivity extends BaseActivity {
 
         ImageView imageView = (ImageView) findViewById(R.id.bar_image);
         Glide.with(this)
-                .load(R.drawable.ic_bar)
+                .load(R.drawable.ic_bar_1)
                 .into(imageView);
 
         SearchByImageFragment fragment = (SearchByImageFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);

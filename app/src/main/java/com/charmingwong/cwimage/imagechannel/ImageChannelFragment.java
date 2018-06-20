@@ -32,8 +32,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.charmingwong.cwimage.common.ImageDialog;
 import com.charmingwong.cwimage.R;
+import com.charmingwong.cwimage.common.ImageDialog;
 import com.charmingwong.cwimage.imagedetails.ImageDetailsActivity;
 import com.charmingwong.cwimage.search.SearchActivity;
 import com.charmingwong.cwimage.util.ApplicationUtils;
@@ -47,7 +47,7 @@ import java.util.List;
 public class ImageChannelFragment extends Fragment implements ImageChannelContract.View {
 
     private final String[] CHANNEL_TITLES = {
-        "美女",      //                  beauty
+        "推荐",      //                  beauty
         "搞笑",      //                  funny
         "壁纸",      //                  wallpaper
         "萌宠",      //                  pet
@@ -135,6 +135,12 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
             } else {
                 view.setVisibility(View.GONE);
             }
+
+            if (position == 0) {
+                mBuilderManager.showBoomMenuButton(false);
+            } else {
+                mBuilderManager.showBoomMenuButton(true);
+            }
         }
 
         @Override
@@ -150,14 +156,14 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         final View rootView = inflater.inflate(R.layout.fragment_image_channel, container, false);
 
         //ViewPager
-        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.libraryPager);
+        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.channelPager);
         viewPager.setAdapter(mChannelPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.channelTabs);
         tabLayout.setupWithViewPager(viewPager);
 
         viewPager.addOnPageChangeListener(mPageChangeListener);
-        viewPager.setOffscreenPageLimit(2);
+//        viewPager.setOffscreenPageLimit(1);
 
         //下拉刷新控件
         mRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_layout);
@@ -224,6 +230,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
                 }
             });
         mBuilderManager.setupBoomMenu(mCurrentChannel);
+        mBuilderManager.showBoomMenuButton(false);
     }
 
     @Override
@@ -284,7 +291,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
     private ChannelImageListAdapter getChannelImageListAdapter(int channel) {
         if (CHANNEL_ITEM_FRAGMENTS[channel] == null) {
             CHANNEL_ITEM_FRAGMENTS[channel] = ChannelItemFragment
-                .newInstance(channel, mChangeChannelImagesCountListener);
+                .newInstance(channel, mPresenter, mChangeChannelImagesCountListener);
         }
         View view = CHANNEL_ITEM_FRAGMENTS[channel].getView();
         if (view == null) {
@@ -337,9 +344,9 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         @Override
         public Fragment getItem(int position) {
             ChannelItemFragment fragment = ChannelItemFragment
-                .newInstance(position, mChangeChannelImagesCountListener);
+                .newInstance(position, mPresenter, mChangeChannelImagesCountListener);
             CHANNEL_ITEM_FRAGMENTS[position] = fragment;
-            mPresenter.query(position, initTagByPosition(position));
+//            mPresenter.query(position, initTagByPosition(position));
             return fragment;
         }
 
@@ -354,47 +361,20 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         }
     }
 
-    private int initTagByPosition(int position) {
-        switch (position) {
-            case 0:
-                return 599;
-            case 1:
-                return 1993;
-            case 2:
-                return 92;
-            case 3:
-                return 234;
-            case 4:
-                return 208;
-            case 5:
-                return 1806;
-            case 6:
-                return 309;
-            case 7:
-                return 187;
-            case 8:
-                return 222;
-            case 9:
-                return 242;
-            case 10:
-                return 592;
-            case 11:
-                return 148;
-            case 12:
-                return 1802;
-        }
-        return -1;
-    }
-
     public static class ChannelItemFragment extends Fragment {
+
+        private ImageChannelContract.Presenter mPresenter;
 
         private ChannelImageListAdapter mChannelImageListAdapter;
 
         private ChangeChannelImagesCountListener mListener;
 
-        public static ChannelItemFragment newInstance(int position,
+        public static ChannelItemFragment newInstance(
+            int position,
+            ImageChannelContract.Presenter presenter,
             ChangeChannelImagesCountListener listener) {
             ChannelItemFragment fragment = new ChannelItemFragment();
+            fragment.setPresenter(presenter);
             fragment.setListener(listener);
             Bundle args = new Bundle();
             args.putInt("num", position);
@@ -407,8 +387,53 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         public ChannelItemFragment() {
         }
 
+        public void setPresenter(ImageChannelContract.Presenter presenter) {
+            mPresenter = presenter;
+        }
+
         public void setListener(ChangeChannelImagesCountListener listener) {
             mListener = listener;
+        }
+
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser) {
+            super.setUserVisibleHint(isVisibleToUser);
+            if (isVisibleToUser) {
+                int position = getArguments().getInt("num");
+                mPresenter.query(position, initTagByPosition(position));
+            }
+        }
+
+        private int initTagByPosition(int position) {
+            switch (position) {
+                case 0:
+                    return 599;
+                case 1:
+                    return 1993;
+                case 2:
+                    return 92;
+                case 3:
+                    return 234;
+                case 4:
+                    return 208;
+                case 5:
+                    return 1806;
+                case 6:
+                    return 309;
+                case 7:
+                    return 187;
+                case 8:
+                    return 222;
+                case 9:
+                    return 244;
+                case 10:
+                    return 592;
+                case 11:
+                    return 148;
+                case 12:
+                    return 1802;
+            }
+            return -1;
         }
 
         @Override

@@ -71,6 +71,11 @@
         <item name="background">@null</item>
     </style>
 
+    <style name="FirstActivity" parent="AppTheme.NoActionBar.TransparentStatusBar">
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
     <style name="AppTheme.NoActionBar.TransparentStatusBar">
         <!--设置为true，视图延伸到状态栏，有的机型状态栏会呈现浅灰色，但不用考虑背景色问题，为false则不延伸到状态栏，但要考虑背景色与状态栏字体颜色，-->
         <item name="android:windowTranslucentStatus">false</item>

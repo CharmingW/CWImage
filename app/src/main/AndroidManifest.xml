@@ -27,7 +27,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:name=".imagechannel.ImageChannelActivity"
-            android:theme="@style/AppTheme.NoActionBar.TransparentStatusBar">
+            android:theme="@style/FirstActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -98,6 +98,7 @@
 
         <activity
             android:exported="false"
+            android:launchMode="singleTask"
             android:name=".settings.SettingsActivity"
             android:theme="@android:style/Theme.Material.Light.DarkActionBar">
         </activity>

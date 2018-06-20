@@ -1,120 +1,123 @@
 <android.support.v4.widget.DrawerLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/drawer_layout"
-  android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:fitsSystemWindows="true"
-  tools:context="com.charmingwong.cwimage.imagesearch.ImageSearchActivity"
-  tools:openDrawer="start">
-
-  <android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context="com.charmingwong.cwimage.imagesearch.ImageSearchActivity"
+    tools:openDrawer="start">
 
-    <android.support.design.widget.AppBarLayout
-      android:id="@+id/app_bar"
-      android:layout_width="match_parent"
-      android:layout_height="210dp"
-      android:fitsSystemWindows="true"
-      android:theme="@style/AppTheme.AppBarOverlay">
-
-      <android.support.design.widget.CollapsingToolbarLayout
-        android:id="@+id/toolbar_layout"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbarFadeDuration="100"
-        app:contentScrim="?attr/colorPrimaryDark"
-        app:layout_scrollFlags="scroll|snap">
+        android:fitsSystemWindows="true">
 
-        <ImageView
-          android:id="@+id/bar_image"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:contentDescription="@string/image_content_description"
-          android:fitsSystemWindows="true"
-          android:scaleType="centerCrop"
-          app:layout_collapseMode="pin"/>
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:fitsSystemWindows="true"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-          android:id="@+id/toolbar"
-          android:layout_width="match_parent"
-          android:layout_height="?attr/actionBarSize"
-          app:layout_collapseMode="parallax"
-          app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarFadeDuration="100"
+                app:contentScrim="?attr/colorPrimaryDark"
+                app:layout_scrollFlags="scroll|snap">
 
-        <LinearLayout
-          android:id="@+id/search_bar"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:background="@drawable/search_bar_bg"
-          android:elevation="@dimen/common_elevation_s"
-          android:orientation="horizontal"
-          app:layout_collapseMode="parallax">
+                <ImageView
+                    android:id="@+id/bar_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/image_content_description"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_bar_2"
+                    app:layout_collapseMode="pin"/>
 
-          <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/common_xs_spacing"
-            android:contentDescription="@string/image_content_description"
-            app:srcCompat="@drawable/ic_search_black_24dp"/>
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="parallax"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-          <TextView
-            android:id="@+id/search_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/common_xs_spacing"
-            android:layout_gravity="center"
-            android:text="搜索图片"
-            android:textColor="@color/text_black"/>
+                <LinearLayout
+                    android:id="@+id/search_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/search_bar_bg"
+                    android:elevation="@dimen/common_elevation_s"
+                    android:orientation="horizontal"
+                    app:layout_collapseMode="parallax">
 
-          <ImageView
-            android:id="@+id/action_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="160dp"
-            android:padding="@dimen/common_xs_spacing"
-            android:contentDescription="@string/image_content_description"
-            app:srcCompat="@drawable/ic_menu_camera_black_24dp"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/common_xs_spacing"
+                        android:contentDescription="@string/image_content_description"
+                        app:srcCompat="@drawable/ic_search_black_24dp"/>
 
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/search_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/common_xs_spacing"
+                        android:layout_gravity="center"
+                        android:text="搜索图片"
+                        android:textColor="@color/text_black"/>
 
-        <android.support.design.widget.TabLayout
-          android:id="@+id/channelTabs"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="bottom"
-          app:layout_collapseMode="parallax"
-          app:tabMinWidth="@dimen/common_xs_spacing"
-          app:tabMode="scrollable">
+                    <ImageView
+                        android:id="@+id/action_camera"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="160dp"
+                        android:padding="@dimen/common_xs_spacing"
+                        android:contentDescription="@string/image_content_description"
+                        app:srcCompat="@drawable/ic_menu_camera_black_24dp"/>
 
-        </android.support.design.widget.TabLayout>
+                </LinearLayout>
 
-      </android.support.design.widget.CollapsingToolbarLayout>
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/channelTabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    app:layout_collapseMode="parallax"
+                    app:tabMinWidth="@dimen/common_xs_spacing"
+                    app:tabMode="scrollable">
 
-    </android.support.design.widget.AppBarLayout>
+                </android.support.design.widget.TabLayout>
 
-    <FrameLayout
-      android:id="@+id/contentFrame"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            </android.support.design.widget.CollapsingToolbarLayout>
 
-  </android.support.design.widget.CoordinatorLayout>
+        </android.support.design.widget.AppBarLayout>
 
-  <android.support.design.widget.NavigationView
-    android:id="@+id/nav_view"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    app:headerLayout="@layout/nav_header_main"
-    app:menu="@menu/activity_main_drawer"/>
+        <FrameLayout
+            android:id="@+id/contentFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer"/>
 
 </android.support.v4.widget.DrawerLayout>
 
