@@ -1,13 +1,13 @@
 package com.charmingwong.cwimage.imagechannel;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 import com.charmingwong.cwimage.common.ApiManager;
 import com.charmingwong.cwimage.common.JsonRequestService;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CharmingWong on 2017/5/15.
@@ -22,8 +22,6 @@ public class ChannelApi {
     public static final int ERROR_NETWORK = 2;
 
     private static volatile ChannelApi api = null;
-
-    private static final String BASE_URL = "http://image.so.com/";
 
     private static final String LIST_TYPE = "new";
 
@@ -56,36 +54,36 @@ public class ChannelApi {
 
     private void queryImages(final int requestCode, final String channel, int tag,
         final int index) {
-        Call<List<ChannelImage>> call;
+        Observable<List<ChannelImage>> observable;
         if (channel.equals("food")) {
-            call = jsonRequestService
+            observable = jsonRequestService
                 .getChannelImages(channel, index, IMAGE_PN, 293, tag, LIST_TYPE, TEMP);
         } else {
-            call = jsonRequestService
+            observable = jsonRequestService
                 .getChannelImages(channel, index, IMAGE_PN, tag, 0, LIST_TYPE, TEMP);
         }
-
-        call.enqueue(new Callback<List<ChannelImage>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<ChannelImage>> call,
-                @NonNull Response<List<ChannelImage>> response) {
-                Log.d(TAG, "onResponse: ");
-                List<ChannelImage> images = response.body();
-                if (response.isSuccessful() && images != null) {
-                    queryListener.onSearchCompleted(requestCode, channel, images);
-                } else {
-                    Log.i(TAG, "onResponse: responseCode = " + response.code());
-                    Log.i(TAG, "onResponse: 请求太频繁，后台返回的 json 的 list 为空");
-                    queryListener.onSearchFailed(requestCode, ERROR_JSON, channel);
+        observable.subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(new Consumer<List<ChannelImage>>() {
+                @Override
+                public void accept(List<ChannelImage> channelImages) {
+                    if (channelImages != null && !channelImages.isEmpty()) {
+                        Log.d(TAG, "queryImages succeed: " + channelImages);
+                        queryListener.onSearchCompleted(requestCode, channel, channelImages);
+                    } else {
+                        Log.i(TAG, "onResponse: 请求太频繁，后台返回的 json 的 list 为空");
+                        queryListener.onSearchFailed(requestCode, ERROR_JSON, channel);
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<ChannelImage>> call, @NonNull Throwable t) {
-                Log.d(TAG, "onFailure: ");
-                queryListener.onSearchFailed(requestCode, ERROR_NETWORK, channel);
-            }
-        });
+            })
+            .doOnError(new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) throws Exception {
+                    Log.d(TAG, "queryImages failed: ");
+                    queryListener.onSearchFailed(requestCode, ERROR_NETWORK, channel);
+                }
+            })
+            .subscribe();
     }
 
     public interface QueryListener {

@@ -2,6 +2,7 @@ package com.charmingwong.cwimage.common;
 
 import retrofit2.Converter.Factory;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 /**
  * <pre>
@@ -39,6 +40,7 @@ public class ApiManager {
         return new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(converterFactory)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(JsonRequestService.class);
     }

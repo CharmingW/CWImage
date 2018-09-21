@@ -56,7 +56,7 @@ public class WallPaperTypesAdapter extends BaseAdapter {
         if (convertView != null) {
             viewHolder = (ViewHolder) convertView.getTag();
         } else {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_category_type, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_category_type, parent, false);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
         }

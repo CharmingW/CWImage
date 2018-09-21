@@ -10,13 +10,13 @@ greendao {
 
 android {
 
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.charmingwong.cwimage"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 10004
         versionName "1.0.4_alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -25,26 +25,25 @@ android {
     buildTypes {
         release {
             debuggable true
-            shrinkResources true
-            minifyEnabled true
+            // shrinkResources true
+            // minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
         debug {
             debuggable true
-            shrinkResources true
-            minifyEnabled true
+            // shrinkResources true
+            // minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
     android.applicationVariants.all { variant ->
-        variant.outputs.each { output ->
+        variant.outputs.all { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk') && outputFile.name.contains("debug")) {
-                //这里修改apk文件名
-                def fileName = outputFile.name.replace("app", "CWImage_${defaultConfig.versionName}_${buildTime()}").replace("-debug", "")
-                output.outputFile = new File(outputFile.parent, fileName)
+                // 这里修改apk文件名
+                outputFileName = outputFile.name.replace("app", "CWImage_${defaultConfig.versionName}_${buildTime()}").replace("-debug", "")
             }
         }
     }
@@ -57,26 +56,27 @@ static def buildTime() {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.yalantis:ucrop:2.2.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.squareup.retrofit2:retrofit:2.2.0'
-    compile 'com.squareup.okhttp3:okhttp:3.8.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.github.arimorty:floatingsearchview:2.0.4'
-    compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
-    compile 'com.github.bumptech.glide:glide:3.8.0'
-    compile 'org.greenrobot:greendao:3.2.2'
-    compile 'org.jsoup:jsoup:1.10.2'
-    compile 'com.nightonke:boommenu:2.1.0'
-    compile 'com.github.dongjunkun:DropDownMenu:1.0.4'
-    testCompile 'junit:junit:4.12'
-    compile 'com.github.markzhai:blockcanary-android:1.5.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
+    implementation 'com.yalantis:ucrop:2.2.0'
+    implementation 'com.github.arimorty:floatingsearchview:2.0.4'
+    implementation 'com.github.chrisbanes.photoview:library:1.2.4'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'org.greenrobot:greendao:3.2.2'
+    implementation 'org.jsoup:jsoup:1.10.2'
+    implementation 'com.nightonke:boommenu:2.1.0'
+    implementation 'com.github.dongjunkun:DropDownMenu:1.0.4'
+    testImplementation 'junit:junit:4.12'
+    implementation 'com.github.markzhai:blockcanary-android:1.5.0'
 }

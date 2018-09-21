@@ -1,16 +1,15 @@
 package com.charmingwong.cwimage.imagesearch.api;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 import com.charmingwong.cwimage.common.ApiManager;
 import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.imagesearch.QImage;
 import com.charmingwong.cwimage.imagesearch.converter.GoogleConverterFactory;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import java.util.Objects;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CharmingWong on 2017/6/1.
@@ -19,18 +18,13 @@ import retrofit2.Response;
 public class GoogleApi implements BaseApi {
 
     private static final String TAG = "GoogleApi";
-
+    private static final String HL = "zh-CN";
+    private static final String ASEARCH = "ichunk";
+    private static final String TBM = "isch";
+    private static final String ASYNC = "_id:rg_s,_pms:s,_fmt:pc";
     public static final int COUNT_PER_PAGE_GOOGLE = 100;
 
-    private static final String BASE_URL = "https://www.google.com/";
-
-    private static final String HL = "zh-CN";
-
-    private static final String ASEARCH = "ichunk";
-
-    private static final String TBM = "isch";
-
-    private String mCustonSize;
+    private String mCustomSize;
 
     private int ijn = 0;
 
@@ -55,7 +49,7 @@ public class GoogleApi implements BaseApi {
     @Override
     public void setSearchFlag(int searchFlag) {
         if (searchFlag == 1) {
-            mCustonSize = "isz:ex,iszw:1080,iszh:1920";
+            mCustomSize = "isz:ex,iszw:1080,iszh:1920";
         }
     }
 
@@ -71,38 +65,40 @@ public class GoogleApi implements BaseApi {
 
     private void searchImages(final int requestCode, final String query, final int index) {
         Log.i(TAG, "searchImages: " + index);
-        Call<List<QImage>> call;
-        call = jsonRequestService.getGoogleImage(
+        jsonRequestService.getGoogleImage(
                 HL,
                 ASEARCH,
                 TBM,
                 query,
                 index,
                 ijn,
-                mCustonSize
-        );
-        call.enqueue(new Callback<List<QImage>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<QImage>> call, @NonNull Response<List<QImage>> response) {
-                List<QImage> QImages = response.body();
-                if (response.isSuccessful() && QImages != null) {
-                    mQueryListener.onSearchCompleted(requestCode, QImages);
-                    mLastQueryResult = new QueryResult(QImages);
-                    lastQuery = query + index;
-                    ijn++;
-                } else {
-                    Log.i(TAG, "onResponse: responseCode = " + response.code());
-                    Log.i(TAG, "onResponse: json null");
-                    ijn = 0;
-                    mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+            mCustomSize,
+            ASYNC
+        )
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(new Consumer<List<QImage>>() {
+                @Override
+                public void accept(List<QImage> qImages) {
+                    if (qImages != null && !qImages.isEmpty()) {
+                        mQueryListener.onSearchCompleted(requestCode, qImages);
+                        mLastQueryResult = new QueryResult(qImages);
+                        lastQuery = query + index;
+                        ijn++;
+                    } else {
+                        Log.i(TAG, "onResponse: json null");
+                        ijn = 0;
+                        mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<QImage>> call, @NonNull Throwable t) {
-                mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
-            }
-        });
+            })
+            .doOnError(new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) {
+                    mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
+                }
+            })
+            .subscribe();
     }
 
     private static class QueryResult {

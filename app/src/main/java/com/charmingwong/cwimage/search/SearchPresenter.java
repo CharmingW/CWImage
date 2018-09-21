@@ -1,7 +1,6 @@
 package com.charmingwong.cwimage.search;
 
 import android.support.annotation.NonNull;
-
 import com.charmingwong.cwimage.dao.CollectionTagDao;
 import com.charmingwong.cwimage.dao.DaoSession;
 import com.charmingwong.cwimage.dao.SearchRecordDao;
@@ -10,12 +9,10 @@ import com.charmingwong.cwimage.search.api.HotSearchApi;
 import com.charmingwong.cwimage.search.api.SuggestionsApi;
 import com.charmingwong.cwimage.search.model.HotSearch;
 import com.charmingwong.cwimage.search.model.SearchRecord;
-
-import org.greenrobot.greendao.query.Query;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import org.greenrobot.greendao.query.Query;
 
 /**
  * Created by CharmingWong on 2017/5/21.

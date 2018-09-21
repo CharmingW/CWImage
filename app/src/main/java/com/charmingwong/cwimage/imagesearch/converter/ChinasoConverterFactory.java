@@ -65,7 +65,7 @@ public class ChinasoConverterFactory extends Converter.Factory {
                 e.printStackTrace();
                 Log.e(TAG, "图片搜索 json 解析出错");
             }
-            return null;
+            return new ArrayList<>(0);
         }
     }
 }

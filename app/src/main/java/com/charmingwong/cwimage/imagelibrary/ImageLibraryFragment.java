@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -56,12 +57,6 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
     private ImageLibraryAdapter mImageLibraryAdapter;
 
     private ImageLibraryContract.Presenter mPresenter;
-
-    private List<BaseModel> mDownloadImages;
-
-    private List<BaseModel> mCollectionImages;
-
-    private List<CollectionTag> mCollectionTags;
 
     private boolean mCanGoBack = false;
 
@@ -140,19 +135,19 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
 
                 if (current == TYPE_TAG) {
                     TagsListAdapter adapter = (TagsListAdapter) list.getAdapter();
-                    for (int i = 0; i < adapter.mCheckeds.size(); i++) {
-                        if (adapter.mCheckeds.get(i)) {
+                    for (int i = 0; i < adapter.mIsCheckedList.size(); i++) {
+                        if (adapter.mIsCheckedList.get(i)) {
                             indexes.add(i);
                         }
-                        adapter.mCheckeds.set(i, false);
+                        adapter.mIsCheckedList.set(i, false);
                     }
                 } else {
                     ImagesListAdapter adapter = (ImagesListAdapter) list.getAdapter();
-                    for (int i = 0; i < adapter.mCheckeds.size(); i++) {
-                        if (adapter.mCheckeds.get(i)) {
+                    for (int i = 0; i < adapter.mIsCheckedList.size(); i++) {
+                        if (adapter.mIsCheckedList.get(i)) {
                             indexes.add(i);
                         }
-                        adapter.mCheckeds.set(i, false);
+                        adapter.mIsCheckedList.set(i, false);
                     }
                 }
 
@@ -178,8 +173,8 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mPresenter.start();
     }
 
@@ -189,32 +184,21 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
     }
 
     @Override
-    public void getInitialData(List<BaseModel> l1, List<BaseModel> l2, List<CollectionTag> l3) {
-        mDownloadImages = l1;
-        mCollectionImages = l2;
-        mCollectionTags = l3;
-
-    }
-
-    @Override
     public void showDownloads(List<BaseModel> baseModels) {
-        ImagesListAdapter adapter = (ImagesListAdapter) (((RecyclerView) mViewPager.findViewWithTag(mViewPager.getCurrentItem()).findViewById(R.id.dataList)).getAdapter());
-        adapter.setBaseModels(baseModels);
-        adapter.notifyDataSetChanged();
+        ImagesListAdapter adapter = (ImagesListAdapter) (((RecyclerView) mViewPager.findViewWithTag(TYPE_DOWNLOAD).findViewById(R.id.dataList)).getAdapter());
+        adapter.notifyDataChange(baseModels);
     }
 
     @Override
     public void showCollection(List<BaseModel> baseModels) {
-        ImagesListAdapter adapter = (ImagesListAdapter) (((RecyclerView) mViewPager.findViewWithTag(mViewPager.getCurrentItem()).findViewById(R.id.dataList)).getAdapter());
-        adapter.setBaseModels(baseModels);
-        adapter.notifyDataSetChanged();
+        ImagesListAdapter adapter = (ImagesListAdapter) (((RecyclerView) mViewPager.findViewWithTag(TYPE_COLLECTION).findViewById(R.id.dataList)).getAdapter());
+        adapter.notifyDataChange(baseModels);
     }
 
     @Override
     public void showCollectedTags(List<CollectionTag> tags) {
-        TagsListAdapter adapter = (TagsListAdapter) (((RecyclerView) mViewPager.findViewWithTag(mViewPager.getCurrentItem()).findViewById(R.id.dataList)).getAdapter());
-        adapter.setCollectionTags(tags);
-        adapter.notifyDataSetChanged();
+        TagsListAdapter adapter = (TagsListAdapter) (((RecyclerView) mViewPager.findViewWithTag(TYPE_TAG).findViewById(R.id.dataList)).getAdapter());
+        adapter.notifyDataChange(tags);
     }
 
     private class ImageLibraryAdapter extends PagerAdapter {
@@ -224,9 +208,10 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
             return 3;
         }
 
+        @NonNull
         @Override
-        public Object instantiateItem(ViewGroup container, final int position) {
-            final View rootView = LayoutInflater.from(container.getContext()).inflate(R.layout.item_library_pager, null);
+        public Object instantiateItem(@NonNull ViewGroup container, final int position) {
+            final View rootView = LayoutInflater.from(container.getContext()).inflate(R.layout.item_library_pager, container, false);
             final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.dataList);
             recyclerView.setTag(R.id.dataList, false);
 
@@ -307,13 +292,13 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
             if (position == TYPE_DOWNLOAD || position == TYPE_COLLECTION) {
                 ImagesListAdapter adapter;
                 if (position == TYPE_DOWNLOAD) {
-                    adapter = new ImagesListAdapter(mDownloadImages);
+                    adapter = new ImagesListAdapter();
                 } else {
-                    adapter = new ImagesListAdapter(mCollectionImages);
+                    adapter = new ImagesListAdapter();
                 }
                 recyclerView.setAdapter(adapter);
             } else {
-                TagsListAdapter adapter = new TagsListAdapter(mCollectionTags);
+                TagsListAdapter adapter = new TagsListAdapter();
                 recyclerView.setAdapter(adapter);
             }
 
@@ -342,22 +327,18 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
 
         private List<BaseModel> mBaseModels;
 
-        private List<Boolean> mCheckeds;
+        private List<Boolean> mIsCheckedList;
 
-        public ImagesListAdapter(List<BaseModel> baseModels) {
+        public void notifyDataChange(List<BaseModel> baseModels) {
             mBaseModels = baseModels;
-            initCheckeds();
+            notifyDataSetChanged();
+            initCheckedList();
         }
 
-        public void setBaseModels(List<BaseModel> baseModels) {
-            mBaseModels = baseModels;
-            initCheckeds();
-        }
-
-        private void initCheckeds() {
-            mCheckeds = new ArrayList<>(mBaseModels.size());
+        private void initCheckedList() {
+            mIsCheckedList = new ArrayList<>(mBaseModels.size());
             for (int i = 0; i < mBaseModels.size(); i++) {
-                mCheckeds.add(false);
+                mIsCheckedList.add(false);
             }
         }
 
@@ -393,7 +374,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                         CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkbox);
                         checkBox.setChecked(true);
                         int position = (int) checkBox.getTag(R.id.checkbox);
-                        mCheckeds.set(position, true);
+                        mIsCheckedList.set(position, true);
                     }
                     return true;
                 }
@@ -406,7 +387,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                     int position = (int) checkBox.getTag(R.id.checkbox);
                     if (isDeleting()) {
                         checkBox.setChecked(!checkBox.isChecked());
-                        mCheckeds.set(position, checkBox.isChecked());
+                        mIsCheckedList.set(position, checkBox.isChecked());
                     } else {
                         Intent intent = new Intent(getActivity(), ImageDetailsActivity.class);
                         Bundle bundle = new Bundle();
@@ -448,7 +429,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
             holder.resolution.setText(image.getWidth() + " x " + image.getHeight());
             if (isDeleting()) {
                 holder.checkBox.setVisibility(View.VISIBLE);
-                holder.checkBox.setChecked(mCheckeds.get(position));
+                holder.checkBox.setChecked(mIsCheckedList.get(position));
             }
             holder.checkBox.setTag(R.id.checkbox, position);
         }
@@ -475,23 +456,19 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
 
         private List<CollectionTag> mCollectionTags;
 
-        private List<Boolean> mCheckeds;
+        private List<Boolean> mIsCheckedList;
 
-        public TagsListAdapter(List<CollectionTag> collectionTags) {
-            mCollectionTags = collectionTags;
-            initCheckeds();
-        }
-
-        private void initCheckeds() {
-            mCheckeds = new ArrayList<>(mCollectionTags.size());
+        private void initCheckedList() {
+            mIsCheckedList = new ArrayList<>(mCollectionTags.size());
             for (int i = 0; i < mCollectionTags.size(); i++) {
-                mCheckeds.add(false);
+                mIsCheckedList.add(false);
             }
         }
 
-        public void setCollectionTags(List<CollectionTag> collectionTags) {
+        public void notifyDataChange(List<CollectionTag> collectionTags) {
             mCollectionTags = collectionTags;
-            initCheckeds();
+            notifyDataSetChanged();
+            initCheckedList();
         }
 
         @Override
@@ -526,7 +503,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                         CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkbox);
                         checkBox.setChecked(true);
                         int position = (int) checkBox.getTag(R.id.checkbox);
-                        mCheckeds.set(position, true);
+                        mIsCheckedList.set(position, true);
                     }
                     return true;
                 }
@@ -540,7 +517,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                         CheckBox checkBox = ((CheckBox) v.findViewById(R.id.checkbox));
                         checkBox.setChecked(!checkBox.isChecked());
                         int position = (int) checkBox.getTag(R.id.checkbox);
-                        mCheckeds.set(position, checkBox.isChecked());
+                        mIsCheckedList.set(position, checkBox.isChecked());
                     } else {
                         Intent intent = new Intent(getActivity(), ImageSearchActivity.class);
                         intent.putExtra("query", ((String) rootView.findViewById(R.id.tag).getTag(R.id.tag)));
@@ -559,7 +536,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
 
             if (isDeleting()) {
                 holder.checkBox.setVisibility(View.VISIBLE);
-                holder.checkBox.setChecked(mCheckeds.get(position));
+                holder.checkBox.setChecked(mIsCheckedList.get(position));
             }
 
             holder.checkBox.setTag(R.id.checkbox, position);

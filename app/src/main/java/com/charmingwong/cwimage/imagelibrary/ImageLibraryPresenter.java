@@ -5,11 +5,15 @@ import com.charmingwong.cwimage.dao.CollectionImageDao;
 import com.charmingwong.cwimage.dao.CollectionTagDao;
 import com.charmingwong.cwimage.dao.DaoSession;
 import com.charmingwong.cwimage.dao.DownloadImageDao;
-
-import org.greenrobot.greendao.query.Query;
-
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
+import org.greenrobot.greendao.query.Query;
 
 /**
  * Created by CharmingWong on 2017/5/27.
@@ -27,7 +31,7 @@ public class ImageLibraryPresenter implements ImageLibraryContract.Presenter {
 
     private List<CollectionTag> mCollectionTags;
 
-    public ImageLibraryPresenter(ImageLibraryContract.View view, DaoSession daoSession) {
+    ImageLibraryPresenter(ImageLibraryContract.View view, DaoSession daoSession) {
         mView = view;
         mView.setPresenter(this);
         mDaoSession = daoSession;
@@ -35,10 +39,21 @@ public class ImageLibraryPresenter implements ImageLibraryContract.Presenter {
 
     @Override
     public void start() {
-        loadDownload();
-        loadCollection();
-        loadTags();
-        mView.getInitialData(mDownloadImages, mCollectionImages, mCollectionTags);
+        executeDaoTask(new Runnable() {
+            @Override
+            public void run() {
+                loadDownload();
+                loadCollection();
+                loadTags();
+            }
+        }, new Runnable() {
+            @Override
+            public void run() {
+                mView.showDownloads(mDownloadImages);
+                mView.showCollection(mCollectionImages);
+                mView.showCollectedTags(mCollectionTags);
+            }
+        });
     }
 
     @Override
@@ -47,13 +62,23 @@ public class ImageLibraryPresenter implements ImageLibraryContract.Presenter {
             mView.showDownloads(mDownloadImages);
             return;
         }
-        loadDownload();
-        mView.showDownloads(mDownloadImages);
+        executeDaoTask(new Runnable() {
+            @Override
+            public void run() {
+                loadDownload();
+            }
+        }, new Runnable() {
+            @Override
+            public void run() {
+                mView.showDownloads(mDownloadImages);
+            }
+        });
     }
 
     private void loadDownload() {
         DownloadImageDao downloadImageDao = mDaoSession.getDownloadImageDao();
-        Query query = downloadImageDao.queryBuilder().orderDesc(DownloadImageDao.Properties.Date).build();
+        Query query = downloadImageDao.queryBuilder().orderDesc(DownloadImageDao.Properties.Date)
+            .build();
         mDownloadImages = query.list();
     }
 
@@ -63,13 +88,23 @@ public class ImageLibraryPresenter implements ImageLibraryContract.Presenter {
             mView.showCollection(mCollectionImages);
             return;
         }
-        loadCollection();
-        mView.showCollection(mCollectionImages);
+        executeDaoTask(new Runnable() {
+            @Override
+            public void run() {
+                loadCollection();
+            }
+        }, new Runnable() {
+            @Override
+            public void run() {
+                mView.showCollection(mCollectionImages);
+            }
+        });
     }
 
     private void loadCollection() {
         CollectionImageDao collectionImageDao = mDaoSession.getCollectionImageDao();
-        Query query = collectionImageDao.queryBuilder().orderDesc(CollectionImageDao.Properties.Date).build();
+        Query query = collectionImageDao.queryBuilder()
+            .orderDesc(CollectionImageDao.Properties.Date).build();
         mCollectionImages = query.list();
     }
 
@@ -79,54 +114,100 @@ public class ImageLibraryPresenter implements ImageLibraryContract.Presenter {
             mView.showCollectedTags(mCollectionTags);
             return;
         }
-        loadTags();
-        mView.showCollectedTags(mCollectionTags);
+        executeDaoTask(new Runnable() {
+            @Override
+            public void run() {
+                loadTags();
+            }
+        }, new Runnable() {
+            @Override
+            public void run() {
+                mView.showCollectedTags(mCollectionTags);
+            }
+        });
     }
 
     private void loadTags() {
         CollectionTagDao collectionTagDao = mDaoSession.getCollectionTagDao();
-        Query<CollectionTag> query = collectionTagDao.queryBuilder().orderDesc(CollectionTagDao.Properties.Date).build();
+        Query<CollectionTag> query = collectionTagDao.queryBuilder()
+            .orderDesc(CollectionTagDao.Properties.Date).build();
         mCollectionTags = query.list();
     }
 
     @Override
-    public void deleteDownloadImages(List<Integer> indexes) {
-        DownloadImageDao downloadImageDao = mDaoSession.getDownloadImageDao();
-        List<DownloadImage> deleted = new ArrayList<>(indexes.size());
-        for (int index : indexes) {
-            deleted.add(((DownloadImage) mDownloadImages.get(index)));
-        }
-        downloadImageDao.deleteInTx(deleted);
+    public void deleteDownloadImages(final List<Integer> indexes) {
+        executeDaoTask(new Runnable() {
+            @Override
+            public void run() {
+                DownloadImageDao downloadImageDao = mDaoSession.getDownloadImageDao();
+                List<DownloadImage> deleted = new ArrayList<>(indexes.size());
+                for (int index : indexes) {
+                    deleted.add(((DownloadImage) mDownloadImages.get(index)));
+                }
+                downloadImageDao.deleteInTx(deleted);
 
-        for (DownloadImage downloadImage : deleted) {
-            mDownloadImages.remove(downloadImage);
-        }
+                for (DownloadImage downloadImage : deleted) {
+                    mDownloadImages.remove(downloadImage);
+                }
+            }
+        }, null);
     }
 
     @Override
-    public void deleteCollectionImages(List<Integer> indexes) {
-        CollectionImageDao collectionImageDao = mDaoSession.getCollectionImageDao();
-        List<CollectionImage> deleted = new ArrayList<>(indexes.size());
-        for (int index : indexes) {
-            deleted.add(((CollectionImage) mCollectionImages.get(index)));
-        }
-        collectionImageDao.deleteInTx(deleted);
-        for (CollectionImage collectionImage : deleted) {
-            mCollectionImages.remove(collectionImage);
-        }
+    public void deleteCollectionImages(final List<Integer> indexes) {
+        executeDaoTask(new Runnable() {
+            @Override
+            public void run() {
+                CollectionImageDao collectionImageDao = mDaoSession.getCollectionImageDao();
+                List<CollectionImage> deleted = new ArrayList<>(indexes.size());
+                for (int index : indexes) {
+                    deleted.add(((CollectionImage) mCollectionImages.get(index)));
+                }
+                collectionImageDao.deleteInTx(deleted);
+                for (CollectionImage collectionImage : deleted) {
+                    mCollectionImages.remove(collectionImage);
+                }
+            }
+        }, null);
     }
 
     @Override
-    public void deleteCollectionTags(List<Integer> indexes) {
-        CollectionTagDao collectionTagDao = mDaoSession.getCollectionTagDao();
-        List<CollectionTag> deleted = new ArrayList<>(indexes.size());
-        for (int index : indexes) {
-            deleted.add(( mCollectionTags.get(index)));
-        }
-        collectionTagDao.deleteInTx(deleted);
+    public void deleteCollectionTags(final List<Integer> indexes) {
+        executeDaoTask(new Runnable() {
+            @Override
+            public void run() {
+                CollectionTagDao collectionTagDao = mDaoSession.getCollectionTagDao();
+                List<CollectionTag> deleted = new ArrayList<>(indexes.size());
+                for (int index : indexes) {
+                    deleted.add((mCollectionTags.get(index)));
+                }
+                collectionTagDao.deleteInTx(deleted);
 
-        for (CollectionTag collectionTag : deleted) {
-            mCollectionTags.remove(collectionTag);
-        }
+                for (CollectionTag collectionTag : deleted) {
+                    mCollectionTags.remove(collectionTag);
+                }
+            }
+        }, null);
+    }
+
+    private void executeDaoTask(final Runnable task, final Runnable callback) {
+        Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> emitter) {
+                task.run();
+                emitter.onComplete();
+            }
+        })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnComplete(new Action() {
+                @Override
+                public void run() {
+                    if (callback != null) {
+                        callback.run();
+                    }
+                }
+            })
+            .subscribe();
     }
 }

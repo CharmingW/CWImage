@@ -14,8 +14,6 @@ public interface ImageLibraryContract {
 
     interface View extends BaseView<Presenter> {
 
-        void getInitialData(List<BaseModel> l1, List<BaseModel> l2, List<CollectionTag> l3);
-
         void showDownloads(List<BaseModel> imageModels);
 
         void showCollection(List<BaseModel> imageModels);

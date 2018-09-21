@@ -19,7 +19,7 @@ import retrofit2.Retrofit;
  */
 public class PostJsonConverterFactory extends Converter.Factory {
 
-    private static final String TAG = "PostJsonConverterFactory";
+    private static final String TAG = "PostFactory";
 
     private PostJsonConverterFactory() {
     }

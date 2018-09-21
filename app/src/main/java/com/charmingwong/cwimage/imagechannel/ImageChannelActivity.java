@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.charmingwong.cwimage.App;
 import com.charmingwong.cwimage.R;
 import com.charmingwong.cwimage.base.BaseActivity;
+import com.charmingwong.cwimage.imagechannel.ImageChannelContract.Presenter;
 import com.charmingwong.cwimage.imagelibrary.ImageLibraryActivity;
 import com.charmingwong.cwimage.search.SearchActivity;
 import com.charmingwong.cwimage.searchbyimage.SearchByImageActivity;
@@ -47,6 +48,8 @@ public class ImageChannelActivity extends BaseActivity
     private long lastTime = 0;
 
     private long start;
+
+    private Presenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +145,11 @@ public class ImageChannelActivity extends BaseActivity
             ActivityUtils
                 .addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
         }
-        new ImageChannelPresenter(fragment);
+        mPresenter = new ImageChannelPresenter(fragment);
+    }
+
+    public Presenter getPresenter() {
+        return mPresenter;
     }
 
     @Override

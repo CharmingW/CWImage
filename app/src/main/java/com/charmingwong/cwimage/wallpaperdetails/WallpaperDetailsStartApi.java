@@ -1,14 +1,12 @@
 package com.charmingwong.cwimage.wallpaperdetails;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
 import com.charmingwong.cwimage.common.ApiManager;
 import com.charmingwong.cwimage.common.JsonRequestService;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import java.util.Objects;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CharmingWong on 2017/6/9.
@@ -70,26 +68,28 @@ public class WallpaperDetailsStartApi {
         } else {
             baseUrl = BASE_DESKTOP_URL;
         }
-        Call<List<String>> call = jsonRequestService.getWallpaperStart(baseUrl + url);
-        call.enqueue(new Callback<List<String>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<String>> call, @NonNull Response<List<String>> response) {
-                List<String> urls = response.body();
-                if (response.isSuccessful() && urls != null) {
-                    mQueryListener.onSearchCompleted(urls);
-                    mLastQueryResult = new QueryResult(urls);
-                    lastQuery = url;
-                } else {
-                    Log.i(TAG, "onResponse:responseCode=" + response.code());
+        jsonRequestService.getWallpaperStart(baseUrl + url)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(new Consumer<List<String>>() {
+                @Override
+                public void accept(List<String> urls) {
+                    if (urls != null) {
+                        mQueryListener.onSearchCompleted(urls);
+                        mLastQueryResult = new QueryResult(urls);
+                        lastQuery = url;
+                    } else {
+                        mQueryListener.onSearchFailed();
+                    }
+                }
+            })
+            .doOnError(new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) {
                     mQueryListener.onSearchFailed();
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<String>> call, @NonNull Throwable t) {
-                mQueryListener.onSearchFailed();
-            }
-        });
+            })
+            .subscribe();
     }
 
     private static class QueryResult {

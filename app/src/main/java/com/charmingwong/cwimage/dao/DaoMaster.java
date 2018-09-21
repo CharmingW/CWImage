@@ -21,18 +21,18 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
-        CollectionImageDao.createTable(db, ifNotExists);
-        CollectionTagDao.createTable(db, ifNotExists);
-        DownloadImageDao.createTable(db, ifNotExists);
         SearchRecordDao.createTable(db, ifNotExists);
+        DownloadImageDao.createTable(db, ifNotExists);
+        CollectionTagDao.createTable(db, ifNotExists);
+        CollectionImageDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
-        CollectionImageDao.dropTable(db, ifExists);
-        CollectionTagDao.dropTable(db, ifExists);
-        DownloadImageDao.dropTable(db, ifExists);
         SearchRecordDao.dropTable(db, ifExists);
+        DownloadImageDao.dropTable(db, ifExists);
+        CollectionTagDao.dropTable(db, ifExists);
+        CollectionImageDao.dropTable(db, ifExists);
     }
 
     /**
@@ -51,10 +51,10 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
-        registerDaoClass(CollectionImageDao.class);
-        registerDaoClass(CollectionTagDao.class);
-        registerDaoClass(DownloadImageDao.class);
         registerDaoClass(SearchRecordDao.class);
+        registerDaoClass(DownloadImageDao.class);
+        registerDaoClass(CollectionTagDao.class);
+        registerDaoClass(CollectionImageDao.class);
     }
 
     public DaoSession newSession() {

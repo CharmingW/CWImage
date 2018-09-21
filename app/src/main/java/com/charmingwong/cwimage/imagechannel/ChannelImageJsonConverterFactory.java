@@ -55,7 +55,7 @@ public class ChannelImageJsonConverterFactory extends Converter.Factory {
                 e.printStackTrace();
                 Log.e(TAG, "图片频道 json 解析出错");
             }
-            return null;
+            return new ArrayList<>(0);
         }
     }
 }

@@ -1,13 +1,11 @@
 package com.charmingwong.cwimage.wallpaperdetails;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
 import com.charmingwong.cwimage.common.ApiManager;
 import com.charmingwong.cwimage.common.JsonRequestService;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import java.util.Objects;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CharmingWong on 2017/6/8.
@@ -66,26 +64,28 @@ public class WallpaperDetailsApi {
         } else {
             baseUrl = BASE_DESKTOP_URL;
         }
-        Call<Wallpaper> call = jsonRequestService.getWallPaper(baseUrl + url);
-        call.enqueue(new Callback<Wallpaper>() {
-            @Override
-            public void onResponse(@NonNull Call<Wallpaper> call, @NonNull Response<Wallpaper> response) {
-                Wallpaper wallpaper = response.body();
-                if (response.isSuccessful() && wallpaper != null) {
-                    mQueryListener.onSearchCompleted(position, wallpaper);
-                    mLastQueryResult = new QueryResult(wallpaper);
-                    lastQuery = url;
-                } else {
-                    Log.i(TAG, "onResponse: responseCode = " + response.code());
+        jsonRequestService.getWallPaper(baseUrl + url)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(new Consumer<Wallpaper>() {
+                @Override
+                public void accept(Wallpaper wallpaper) {
+                    if (wallpaper != null) {
+                        mQueryListener.onSearchCompleted(position, wallpaper);
+                        mLastQueryResult = new QueryResult(wallpaper);
+                        lastQuery = url;
+                    } else {
+                        mQueryListener.onSearchFailed();
+                    }
+                }
+            })
+            .doOnError(new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) {
                     mQueryListener.onSearchFailed();
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<Wallpaper> call, @NonNull Throwable t) {
-                mQueryListener.onSearchFailed();
-            }
-        });
+            })
+            .subscribe();
     }
 
     private static class QueryResult {

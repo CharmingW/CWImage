@@ -7,11 +7,9 @@ import com.charmingwong.cwimage.search.model.HotSearch;
 import com.charmingwong.cwimage.searchbyimage.SoImage;
 import com.charmingwong.cwimage.wallpaper.WallpaperCover;
 import com.charmingwong.cwimage.wallpaperdetails.Wallpaper;
-
+import io.reactivex.Observable;
 import java.util.List;
-
 import okhttp3.RequestBody;
-import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -26,7 +24,7 @@ import retrofit2.http.Url;
 public interface JsonRequestService {
 
     @GET("https://image.baidu.com/search/acjson")
-    Call<List<QImage>> getBaiduImages(
+    Observable<List<QImage>> getBaiduImages(
             @Query("word") String word,
             @Query("tn") String tn,
             @Query("ipn") String ipn,
@@ -37,7 +35,7 @@ public interface JsonRequestService {
     );
 
     @GET("http://image.so.com/j")
-    Call<List<QImage>> getQH360Images(
+    Observable<List<QImage>> getQH360Images(
             @Query("q") String query,
             @Query("sn") int sn,
             @Query("pn") int pn,
@@ -46,7 +44,7 @@ public interface JsonRequestService {
     );
 
     @GET("http://pic.sogou.com/pics")
-    Call<List<QImage>> getSogouImages(
+    Observable<List<QImage>> getSogouImages(
             @Query("query") String query,
             @Query("reqType") String reqType,
             @Query("start") int start,
@@ -56,30 +54,31 @@ public interface JsonRequestService {
     );
 
     @GET("http://image.chinaso.com/getpic")
-    Call<List<QImage>> getChinasoImages(
+    Observable<List<QImage>> getChinasoImages(
             @Query("q") String query,
             @Query("st") int start,
             @Query("rn") int rn);
 
     @GET
-    Call<List<QImage>> getBingImages(
+    Observable<List<QImage>> getBingImages(
             @Url String url
     );
 
     @Headers("user-agent:Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76B) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.133 Mobile Safari/535.19")
     @GET("https://www.google.com/search")
-    Call<List<QImage>> getGoogleImage(
+    Observable<List<QImage>> getGoogleImage(
             @Query("hl") String hl,
             @Query("asearch") String asearch,
             @Query("tbm") String tbn,
             @Query("q") String query,
             @Query("start") int start,
             @Query("ijn") int ijn,
-            @Query("tbs") String tbs
+            @Query("tbs") String tbs,
+            @Query("async") String async
     );
 
     @GET("http://image.so.com/zj")
-    Call<List<ChannelImage>> getChannelImages(
+    Observable<List<ChannelImage>> getChannelImages(
             @Query("ch") String channel,
             @Query("sn") int sn,
             @Query("pn") int pn,
@@ -90,7 +89,7 @@ public interface JsonRequestService {
     );
 
     @GET("http://sug.image.so.com/suggest/word")
-    Call<List<ImageSearchSuggestion>> getSearchSuggestions(
+    Observable<List<ImageSearchSuggestion>> getSearchSuggestions(
             @Query("callback") String callback,
             @Query("encodein") String encodeIn,
             @Query("encodeout") String encodeOut,
@@ -99,33 +98,33 @@ public interface JsonRequestService {
 
     @Headers("Cache-Control:max-age=86400")
     @GET("http://image.baidu.com/")
-    Call<List<HotSearch>> getHotSearches();
+    Observable<List<HotSearch>> getHotSearches();
 
     @POST("http://image.baidu.com/n/image")
-    Call<String> postImage(
+    Observable<String> postImage(
             @Body RequestBody image,
             @Query("fr") String from,
             @Query("needJson") boolean needJson
     );
 
     @GET("http://image.baidu.com/n/similar")
-    Call<List<SoImage>> getSoImages(
+    Observable<List<SoImage>> getSoImages(
             @Query("queryImageUrl") String url,
             @Query("pn") int pn,
             @Query("rn") int rn);
 
     @GET
-    Call<List<WallpaperCover>> getWallPaperCover(
+    Observable<List<WallpaperCover>> getWallPaperCover(
             @Url String url
     );
 
     @GET
-    Call<Wallpaper> getWallPaper(
+    Observable<Wallpaper> getWallPaper(
             @Url String url
     );
 
     @GET
-    Call<List<String>> getWallpaperStart(
+    Observable<List<String>> getWallpaperStart(
             @Url String url
     );
 }

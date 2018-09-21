@@ -377,7 +377,7 @@ public class WallpaperDetailsFragment extends Fragment implements WallpaperDetai
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            final View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.item_image_details, null);
+            final View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.item_image_details, container, false);
 
             final ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
             progressBar.setVisibility(View.VISIBLE);

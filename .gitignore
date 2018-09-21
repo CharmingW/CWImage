@@ -16,8 +16,6 @@
 # Java class files
 *.class
 
-/app/proguard-rules.pro
-
 # Log Files
 *.log
 

@@ -1,13 +1,12 @@
 package com.charmingwong.cwimage.searchbyimage;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 import com.charmingwong.cwimage.common.ApiManager;
 import com.charmingwong.cwimage.common.JsonRequestService;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CharmingWong on 2017/5/23.
@@ -46,25 +45,27 @@ public class SoApi {
     }
 
     private void searchImages(final int requestCode, final String queryImageUrl, final int index) {
-        Call<List<SoImage>> call = jsonRequestService.getSoImages(queryImageUrl, index, RN);
-        call.enqueue(new Callback<List<SoImage>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<SoImage>> call, @NonNull Response<List<SoImage>> response) {
-                List<SoImage> soImages = response.body();
-                if (response.isSuccessful() && soImages != null) {
-                    mQueryListener.onSearchCompleted(requestCode, soImages);
-                } else {
-                    Log.i(TAG, "onResponse: responseCode = " + response.code());
-                    mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+        jsonRequestService.getSoImages(queryImageUrl, index, RN)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(new Consumer<List<SoImage>>() {
+                @Override
+                public void accept(List<SoImage> soImages) {
+                    if (soImages != null && !soImages.isEmpty()) {
+                        mQueryListener.onSearchCompleted(requestCode, soImages);
+                    } else {
+                        mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<SoImage>> call, @NonNull Throwable t) {
-                t.printStackTrace();
-                mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
-            }
-        });
+            })
+            .doOnError(new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) {
+                    mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
+                    Log.e(TAG, "search images failed: ", throwable);
+                }
+            })
+            .subscribe();
     }
 
     public interface QueryListener {

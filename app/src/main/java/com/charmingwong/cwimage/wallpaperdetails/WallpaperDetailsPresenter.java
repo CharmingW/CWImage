@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.charmingwong.cwimage.base.BaseModel;
@@ -18,7 +17,6 @@ import com.charmingwong.cwimage.dao.DownloadImageDao;
 import com.charmingwong.cwimage.imagelibrary.CollectionImage;
 import com.charmingwong.cwimage.imagelibrary.DownloadImage;
 import com.charmingwong.cwimage.util.ApplicationUtils;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -34,7 +32,7 @@ import java.util.concurrent.ExecutionException;
 
 public class WallpaperDetailsPresenter implements WallpaperDetailsContact.Presenter {
 
-    private static final String TAG = "WallpaperDetailsPresenter";
+    private static final String TAG = "WpDetailsPresenter";
 
     private WallpaperDetailsContact.View mView;
 

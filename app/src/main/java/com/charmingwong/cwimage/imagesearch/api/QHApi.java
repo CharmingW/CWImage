@@ -1,24 +1,21 @@
 package com.charmingwong.cwimage.imagesearch.api;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 import com.charmingwong.cwimage.common.ApiManager;
 import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.imagesearch.ImageSearchPresenter;
 import com.charmingwong.cwimage.imagesearch.QImage;
 import com.charmingwong.cwimage.imagesearch.converter.QHConverterFactory;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import java.util.Objects;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A class for interfacing with Flickr's http API.
  */
 public class QHApi implements BaseApi {
-
-    private static final String BASE_URL = "http://image.so.com/";
 
     private static final String TAG = "QHApi";
 
@@ -28,13 +25,13 @@ public class QHApi implements BaseApi {
 
     private String mHeight;
 
-
     public static QHApi newInstance() {
         return new QHApi();
     }
 
     private QHApi() {
-        jsonRequestService = ApiManager.getInstance().getJsonRequestService(QHConverterFactory.create());
+        jsonRequestService = ApiManager.getInstance()
+            .getJsonRequestService(QHConverterFactory.create());
     }
 
     private QueryListener mQueryListener;
@@ -64,37 +61,41 @@ public class QHApi implements BaseApi {
     }
 
     private void searchImages(final int requestCode, final String query, final int index) {
-        Call<List<QImage>> call = jsonRequestService.getQH360Images(
-                query,
-                index,
-                ImageSearchPresenter.COUNT_PER_PAGE,
-                mWidth,
-                mHeight
-        );
-        call.enqueue(new Callback<List<QImage>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<QImage>> call, @NonNull Response<List<QImage>> response) {
-                List<QImage> QImages = response.body();
-                if (response.isSuccessful() && QImages != null) {
-                    mQueryListener.onSearchCompleted(requestCode, QImages);
-                    mLastQueryResult = new QueryResult(QImages);
-                    lastQuery = query + index;
-                } else {
-                    Log.i(TAG, "onResponse: responseCode = " + response.code());
-                    Log.i(TAG, "onResponse: json null");
-                    mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+        jsonRequestService.getQH360Images(
+            query,
+            index,
+            ImageSearchPresenter.COUNT_PER_PAGE,
+            mWidth,
+            mHeight
+        )
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(new Consumer<List<QImage>>() {
+                @Override
+                public void accept(List<QImage> qImages) {
+                    if (qImages != null && !qImages.isEmpty()) {
+                        mQueryListener.onSearchCompleted(requestCode, qImages);
+                        mLastQueryResult = new QueryResult(qImages);
+                        lastQuery = query + index;
+                    } else {
+                        Log.i(TAG, "onResponse: json null");
+                        mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<QImage>> call, @NonNull Throwable t) {
-                mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
-            }
-        });
+            })
+            .doOnError(new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) {
+                    mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
+                }
+            })
+            .subscribe();
     }
 
     private static class QueryResult {
+
         private final List<QImage> mQImages;
+
         public QueryResult(List<QImage> results) {
             this.mQImages = results;
         }

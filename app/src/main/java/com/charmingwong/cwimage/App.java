@@ -2,6 +2,7 @@ package com.charmingwong.cwimage;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -17,6 +18,12 @@ import java.io.File;
 public class App extends Application {
 
     public static long start;
+
+    private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
+
+    public static Handler getMainHandler() {
+        return MAIN_HANDLER;
+    }
 
     @Override
     public void onCreate() {

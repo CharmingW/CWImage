@@ -3,7 +3,6 @@ package com.charmingwong.cwimage.search.converter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.charmingwong.cwimage.search.model.HotSearch;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -33,34 +32,37 @@ public class HotSearchesConverterFactory extends Converter.Factory {
 
     @Nullable
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
+        Retrofit retrofit) {
         return new HotSearchesConverter();
     }
 
     private class HotSearchesConverter implements Converter<ResponseBody, List<HotSearch>> {
-        @Override
-        public List<HotSearch> convert(@NonNull ResponseBody value) throws IOException {
-            try {
 
+        @Override
+        public List<HotSearch> convert(@NonNull ResponseBody value) {
+            List<HotSearch> hotSearches = null;
+            try {
                 String result = value.string();
                 Document document = Jsoup.parse(result);
                 Elements elements = document.getElementsByAttributeValue("class", "img_single_box");
 
-                if (elements.size() == 0) {
-                    return null;
+                if (elements.size() != 0) {
+                    hotSearches = new ArrayList<>(elements.size());
+                    for (Element element : elements) {
+                        String imageUrl = element.getElementsByTag("img").get(0).attr("src");
+                        String query = element
+                            .getElementsByAttributeValue("class", "img_instr_layer").get(0).text();
+                        hotSearches.add(new HotSearch(imageUrl, query));
+                    }
                 }
-
-                List<HotSearch> hotSearches = new ArrayList<>(elements.size());
-                for (Element element : elements) {
-                    String imageUrl = element.getElementsByTag("img").get(0).attr("src");
-                    String query = element.getElementsByAttributeValue("class", "img_instr_layer").get(0).text();
-                    hotSearches.add(new HotSearch(imageUrl, query));
-                }
-                return hotSearches;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+            if (hotSearches == null) {
+                return new ArrayList<>(0);
+            }
+            return hotSearches;
         }
     }
 

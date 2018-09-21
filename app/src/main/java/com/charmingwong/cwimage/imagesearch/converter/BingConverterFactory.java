@@ -45,7 +45,8 @@ public class BingConverterFactory extends Converter.Factory {
 
     @Nullable
     @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
+        Retrofit retrofit) {
         return new BingConverter();
     }
 
@@ -57,7 +58,8 @@ public class BingConverterFactory extends Converter.Factory {
                 String result = value.string();
                 Document document = Jsoup.parse(result);
 
-                BingApi.NEXT_URL = document.getElementsByAttribute("data-nextUrl").get(0).attr("data-nextUrl");
+                BingApi.NEXT_URL = document.getElementsByAttribute("data-nextUrl").get(0)
+                    .attr("data-nextUrl");
                 Log.i(TAG, "convert: " + BingApi.NEXT_URL);
 
                 Elements elements = document.getElementsByAttributeValue("class", "iuscp varh");
@@ -65,26 +67,29 @@ public class BingConverterFactory extends Converter.Factory {
                 JSONObject image = new JSONObject();
                 for (int i = 0; i < elements.size(); i++) {
                     Element element = elements.get(i);
-                    JSONObject urlJson = new JSONObject(element.getElementsByAttribute("m").get(0).attr("m"));
+                    JSONObject urlJson = new JSONObject(
+                        element.getElementsByAttribute("m").get(0).attr("m"));
                     image.put("url", urlJson.getString("murl"));
                     image.put("thumbUrl", element.getElementsByTag("img").get(0).attr("src"));
                     Pattern pattern = Pattern.compile("\\d+");
-                    Matcher matcher = pattern.matcher(element.getElementsByAttribute("tabindex").get(0).text());
-                    if (matcher.find()) {
-                        image.put("width", matcher.group());
+                    Elements tabIndex = element.getElementsByAttribute("tabindex");
+                    if (!tabIndex.isEmpty()) {
+                        Matcher matcher = pattern.matcher(tabIndex.get(0).text());
+                        if (matcher.find()) {
+                            image.put("width", matcher.group());
+                        }
+                        if (matcher.find()) {
+                            image.put("height", matcher.group());
+                        }
+                        qImages.add(new QImage(image, ImageFinder.BING));
                     }
-                    if (matcher.find()) {
-                        image.put("height", matcher.group());
-                    }
-//                    Log.i(TAG, "convert: " + image.toString());
-                    qImages.add(new QImage(image, ImageFinder.BING));
                 }
                 return qImages;
             } catch (JSONException e) {
                 e.printStackTrace();
                 Log.e(TAG, "图片搜索 json 解析出错");
             }
-            return null;
+            return new ArrayList<>(0);
         }
     }
 }

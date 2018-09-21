@@ -1,25 +1,21 @@
 package com.charmingwong.cwimage.imagesearch.api;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 import com.charmingwong.cwimage.common.ApiManager;
 import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.imagesearch.QImage;
 import com.charmingwong.cwimage.imagesearch.converter.SogouConverterFactory;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import java.util.Objects;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CharmingWong on 2017/5/30.
  */
 
 public class SogouApi implements BaseApi {
-
-
-    private static final String BASE_URL = "http://pic.sogou.com/";
 
     private static final String REQ_TYPE = "ajax";
 
@@ -72,46 +68,36 @@ public class SogouApi implements BaseApi {
 
     private void searchImages(final int requestCode, final String query, final int index) {
         Log.i(TAG, "searchImages: " + index);
-        Call<List<QImage>> call = jsonRequestService.getSogouImages(
+        jsonRequestService.getSogouImages(
                 query,
                 REQ_TYPE,
                 index,
                 mWidth,
                 mHeight,
                 DM
-        );
-
-//        query:(unable to decode value)
-//        mode:1
-//        dm:4
-//        leftp:44230501
-//        cwidth:1080
-//        cheight:1920
-//        st:0
-//        start:144
-//        reqType:ajax
-//        reqFrom:result
-//        tn:0
-        call.enqueue(new Callback<List<QImage>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<QImage>> call, @NonNull Response<List<QImage>> response) {
-                List<QImage> QImages = response.body();
-                if (response.isSuccessful() && QImages != null) {
-                    mQueryListener.onSearchCompleted(requestCode, QImages);
-                    mLastQueryResult = new QueryResult(QImages);
-                    lastQuery = query + index;
-                } else {
-                    Log.i(TAG, "onResponse: responseCode = " + response.code());
-                    Log.i(TAG, "onResponse: json null");
-                    mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+        )
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(new Consumer<List<QImage>>() {
+                @Override
+                public void accept(List<QImage> qImages) {
+                    if (qImages != null && !qImages.isEmpty()) {
+                        mQueryListener.onSearchCompleted(requestCode, qImages);
+                        mLastQueryResult = new QueryResult(qImages);
+                        lastQuery = query + index;
+                    } else {
+                        Log.i(TAG, "onResponse: json null");
+                        mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<QImage>> call, @NonNull Throwable t) {
-                mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
-            }
-        });
+            })
+            .doOnError(new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) throws Exception {
+                    mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
+                }
+            })
+            .subscribe();
     }
 
     private static class QueryResult {

@@ -2,14 +2,12 @@ package com.charmingwong.cwimage.imagesearch;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
-
 import com.charmingwong.cwimage.dao.CollectionTagDao;
 import com.charmingwong.cwimage.dao.DaoSession;
 import com.charmingwong.cwimage.imagelibrary.CollectionTag;
 import com.charmingwong.cwimage.imagesearch.api.BaseApi;
 import com.charmingwong.cwimage.imagesearch.api.GoogleApi;
 import com.charmingwong.cwimage.imagesearch.api.QHApi;
-
 import java.util.Date;
 import java.util.List;
 

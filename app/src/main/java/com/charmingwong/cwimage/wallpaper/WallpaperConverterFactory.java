@@ -30,7 +30,7 @@ import retrofit2.Retrofit;
 public class WallpaperConverterFactory extends Converter.Factory {
 
 
-    private static final String TAG = "WallpaperConverterFactory";
+    private static final String TAG = "WpConverterFactory";
 
     private WallpaperConverterFactory() {
     }

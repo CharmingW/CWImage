@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,8 +32,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.charmingwong.cwimage.App;
 import com.charmingwong.cwimage.R;
 import com.charmingwong.cwimage.common.ImageDialog;
+import com.charmingwong.cwimage.imagechannel.ImageChannelContract.Presenter;
 import com.charmingwong.cwimage.imagedetails.ImageDetailsActivity;
 import com.charmingwong.cwimage.search.SearchActivity;
 import com.charmingwong.cwimage.util.ApplicationUtils;
@@ -47,7 +49,7 @@ import java.util.List;
 public class ImageChannelFragment extends Fragment implements ImageChannelContract.View {
 
     private final String[] CHANNEL_TITLES = {
-        "推荐",      //                  beauty
+        "美女",      //                  beauty
         "搞笑",      //                  funny
         "壁纸",      //                  wallpaper
         "萌宠",      //                  pet
@@ -78,6 +80,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
     private int mCurrentTag;
 
+
     @Override
     public int getCurrentChannelImageLastIndex() {
         return getChannelItemImagesLastIndex(mCurrentChannel);
@@ -101,17 +104,17 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         mChannelPagerAdapter = new ChannelPagerAdapter(getFragmentManager());
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        for (int i = 0; i < CHANNEL_ITEM_FRAGMENTS.length; i++) {
-            ChannelItemFragment fragment = CHANNEL_ITEM_FRAGMENTS[i];
-            if (fragment != null) {
-                outState.putParcelableArrayList(CHANNEL_TITLES[i],
-                    (ArrayList<? extends Parcelable>) fragment.mChannelImageListAdapter.mChannelImages);
-            }
-        }
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        for (int i = 0; i < CHANNEL_ITEM_FRAGMENTS.length; i++) {
+//            ChannelItemFragment fragment = CHANNEL_ITEM_FRAGMENTS[i];
+//            if (fragment != null) {
+//                outState.putParcelableArrayList(CHANNEL_TITLES[i],
+//                    (ArrayList<? extends Parcelable>) fragment.mChannelImageListAdapter.mChannelImages);
+//            }
+//        }
+//    }
 
     private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -120,27 +123,26 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         }
 
         @Override
-        public void onPageSelected(int position) {
-
+        public void onPageSelected(final int position) {
             mCurrentChannel = position;
             mRefreshLayout.setRefreshing(false);
-            mBuilderManager.setupBoomMenu(position);
 
-            final View rootView = CHANNEL_ITEM_FRAGMENTS[position].getView();
-            View view = rootView.findViewById(R.id.progressBar);
-
-            if (getChannelItemImagesLastIndex(position) == 0
-                && CHANNEL_ITEM_FRAGMENTS[position] == null) {
-                view.setVisibility(View.VISIBLE);
-            } else {
-                view.setVisibility(View.GONE);
+            if (CHANNEL_ITEM_FRAGMENTS[position] != null) {
+                final View rootView = CHANNEL_ITEM_FRAGMENTS[position].getView();
+                View view = rootView.findViewById(R.id.progressBar);
+                if (getChannelItemImagesLastIndex(position) == 0) {
+                    view.setVisibility(View.VISIBLE);
+                } else {
+                    view.setVisibility(View.GONE);
+                }
             }
 
-            if (position == 0) {
-                mBuilderManager.showBoomMenuButton(false);
-            } else {
-                mBuilderManager.showBoomMenuButton(true);
-            }
+            App.getMainHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mBuilderManager.setupBoomMenu(position);
+                }
+            }, 50);
         }
 
         @Override
@@ -151,22 +153,22 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
     @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull final LayoutInflater inflater, ViewGroup container,
         @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_image_channel, container, false);
 
         //ViewPager
-        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.channelPager);
+        ViewPager viewPager = rootView.findViewById(R.id.channelPager);
         viewPager.setAdapter(mChannelPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) getActivity().findViewById(R.id.channelTabs);
+        TabLayout tabLayout = ((Activity) container.getContext()).findViewById(R.id.channelTabs);
         tabLayout.setupWithViewPager(viewPager);
 
         viewPager.addOnPageChangeListener(mPageChangeListener);
-//        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(1);
 
         //下拉刷新控件
-        mRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh_layout);
+        mRefreshLayout = rootView.findViewById(R.id.refresh_layout);
         SwipeRefreshLayout.OnRefreshListener refreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -186,7 +188,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         });
 
         //浮动按钮
-        FloatingActionButton fabTop = (FloatingActionButton) rootView.findViewById(R.id.fab_top);
+        FloatingActionButton fabTop = rootView.findViewById(R.id.fab_top);
         fabTop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,18 +199,14 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         });
 
         setupBoomMenu(rootView);
-
-        mPresenter.start();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mPresenter.downloadWelcomeImage();
-            }
-        }, 2000);
-
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mPresenter.start();
+    }
 
     private void setupBoomMenu(View parent) {
         mBuilderManager = new BuilderManager(parent);
@@ -230,7 +228,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
                 }
             });
         mBuilderManager.setupBoomMenu(mCurrentChannel);
-        mBuilderManager.showBoomMenuButton(false);
+        mBuilderManager.showBoomMenuButton(true);
     }
 
     @Override
@@ -238,7 +236,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
         Fragment fragment = CHANNEL_ITEM_FRAGMENTS[channel];
         final View rootView = fragment.getView();
-        if (fragment == null || fragment.getView() == null) {
+        if (fragment.getView() == null) {
             return;
         }
 
@@ -291,7 +289,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
     private ChannelImageListAdapter getChannelImageListAdapter(int channel) {
         if (CHANNEL_ITEM_FRAGMENTS[channel] == null) {
             CHANNEL_ITEM_FRAGMENTS[channel] = ChannelItemFragment
-                .newInstance(channel, mPresenter, mChangeChannelImagesCountListener);
+                .newInstance(channel, mChangeChannelImagesCountListener);
         }
         View view = CHANNEL_ITEM_FRAGMENTS[channel].getView();
         if (view == null) {
@@ -343,10 +341,10 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
         @Override
         public Fragment getItem(int position) {
+            Log.d(TAG, "getItem: ");
             ChannelItemFragment fragment = ChannelItemFragment
-                .newInstance(position, mPresenter, mChangeChannelImagesCountListener);
+                .newInstance(position, mChangeChannelImagesCountListener);
             CHANNEL_ITEM_FRAGMENTS[position] = fragment;
-//            mPresenter.query(position, initTagByPosition(position));
             return fragment;
         }
 
@@ -363,18 +361,15 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
     public static class ChannelItemFragment extends Fragment {
 
-        private ImageChannelContract.Presenter mPresenter;
-
         private ChannelImageListAdapter mChannelImageListAdapter;
 
         private ChangeChannelImagesCountListener mListener;
 
         public static ChannelItemFragment newInstance(
             int position,
-            ImageChannelContract.Presenter presenter,
             ChangeChannelImagesCountListener listener) {
+            Log.d(TAG, "newInstance: ");
             ChannelItemFragment fragment = new ChannelItemFragment();
-            fragment.setPresenter(presenter);
             fragment.setListener(listener);
             Bundle args = new Bundle();
             args.putInt("num", position);
@@ -387,21 +382,33 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         public ChannelItemFragment() {
         }
 
-        public void setPresenter(ImageChannelContract.Presenter presenter) {
-            mPresenter = presenter;
-        }
-
         public void setListener(ChangeChannelImagesCountListener listener) {
             mListener = listener;
         }
 
         @Override
-        public void setUserVisibleHint(boolean isVisibleToUser) {
-            super.setUserVisibleHint(isVisibleToUser);
-            if (isVisibleToUser) {
-                int position = getArguments().getInt("num");
-                mPresenter.query(position, initTagByPosition(position));
+        public void onSaveInstanceState(@NonNull Bundle outState) {
+            super.onSaveInstanceState(outState);
+            Log.d(TAG, "onSaveInstanceState: ");
+            outState.putBundle("args", getArguments());
+        }
+
+        @Override
+        public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+            super.onViewStateRestored(savedInstanceState);
+            Log.d(TAG, "onViewStateRestored: ");
+            if (savedInstanceState != null) {
+                setArguments(savedInstanceState.getBundle("args"));
             }
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+            Log.d(TAG, "onActivityCreated: ");
+            int position = getArguments() != null ? getArguments().getInt("num") : 0;
+            Presenter presenter = ((ImageChannelActivity) getActivity()).getPresenter();
+            presenter.query(position, initTagByPosition(position));
         }
 
         private int initTagByPosition(int position) {
@@ -444,35 +451,35 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
         @Nullable
         @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+        public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container,
             @Nullable Bundle savedInstanceState) {
+            Log.d(TAG, "onCreateView: ");
             final View rootView = inflater
                 .inflate(R.layout.fragment_image_channel_item, container, false);
 
-            RecyclerView channelImageList = (RecyclerView) rootView
+            RecyclerView channelImageList = rootView
                 .findViewById(R.id.channelImageList);
-            channelImageList
-                .setLayoutManager(
-                    new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL) {
-                        @Override
-                        public void smoothScrollToPosition(RecyclerView recyclerView,
-                            RecyclerView.State state,
-                            int position) {
-                            LinearSmoothScroller scroller = new LinearSmoothScroller(
-                                getActivity()) {
-                                @Override
-                                protected int calculateTimeForScrolling(int dx) {
+            channelImageList.setLayoutManager(
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL) {
+                    @Override
+                    public void smoothScrollToPosition(RecyclerView recyclerView,
+                        RecyclerView.State state,
+                        int position) {
+                        LinearSmoothScroller scroller = new LinearSmoothScroller(
+                            container.getContext()) {
+                            @Override
+                            protected int calculateTimeForScrolling(int dx) {
 
-                                    if (dx > 2500) {
-                                        dx = 2500;
-                                    }
-                                    return super.calculateTimeForScrolling(dx);
+                                if (dx > 2500) {
+                                    dx = 2500;
                                 }
-                            };
-                            scroller.setTargetPosition(0);
-                            startSmoothScroll(scroller);
-                        }
-                    });
+                                return super.calculateTimeForScrolling(dx);
+                            }
+                        };
+                        scroller.setTargetPosition(0);
+                        startSmoothScroll(scroller);
+                    }
+                });
             channelImageList.setAdapter(mChannelImageListAdapter);
 
             channelImageList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -484,7 +491,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
                         int[] lastVisibleIndexes = new int[3];
                         staggeredGridLayoutManager.findLastVisibleItemPositions(lastVisibleIndexes);
                         int size = mChannelImageListAdapter.getItemCount();
-                        boolean isLoading = getArguments().getBoolean("isLoading");
+                        boolean isLoading = getArguments() != null && getArguments().getBoolean("isLoading");
                         if ((lastVisibleIndexes[0] == size - 1
                             || lastVisibleIndexes[1] == size - 1
                             || lastVisibleIndexes[2] == size - 1) && !isLoading) {
@@ -538,8 +545,9 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
             return mChannelImages.size();
         }
 
+        @NonNull
         @Override
-        public ChannelImageViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+        public ChannelImageViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
             final View rootView = ((Activity) parent.getContext())
                 .getLayoutInflater()
                 .inflate(R.layout.item_image_channel, parent, false);
@@ -589,7 +597,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         }
 
         @Override
-        public void onBindViewHolder(final ChannelImageViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final ChannelImageViewHolder holder, int position) {
             final ChannelImage channelImage = mChannelImages.get(position);
             float density = Resources.getSystem().getDisplayMetrics().density;
             int width = (int) (178 * density);
@@ -643,10 +651,10 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
             ChannelImageViewHolder(View itemView) {
                 super(itemView);
-                image = (ImageView) itemView.findViewById(R.id.image);
-                resolution = (TextView) itemView.findViewById(R.id.resolution);
-                type = (TextView) itemView.findViewById(R.id.type);
-                layout = (FrameLayout) itemView.findViewById(R.id.tagLayout);
+                image = itemView.findViewById(R.id.image);
+                resolution = itemView.findViewById(R.id.resolution);
+                type = itemView.findViewById(R.id.type);
+                layout = itemView.findViewById(R.id.tagLayout);
             }
         }
     }

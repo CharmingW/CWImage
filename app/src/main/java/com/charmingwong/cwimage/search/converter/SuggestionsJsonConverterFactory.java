@@ -26,7 +26,7 @@ import retrofit2.Retrofit;
 
 public class SuggestionsJsonConverterFactory extends Converter.Factory {
 
-    private static final String TAG = "SuggestionsJsonConverterFactory";
+    private static final String TAG = "SuggestionsFactory";
 
     private SuggestionsJsonConverterFactory() {
     }
@@ -59,7 +59,7 @@ public class SuggestionsJsonConverterFactory extends Converter.Factory {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return null;
+            return new ArrayList<>(0);
         }
     }
 

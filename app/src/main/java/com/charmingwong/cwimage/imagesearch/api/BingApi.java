@@ -1,16 +1,16 @@
 package com.charmingwong.cwimage.imagesearch.api;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 import com.charmingwong.cwimage.common.ApiManager;
 import com.charmingwong.cwimage.common.JsonRequestService;
 import com.charmingwong.cwimage.imagesearch.QImage;
 import com.charmingwong.cwimage.imagesearch.converter.BingConverterFactory;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import java.util.List;
 import java.util.Objects;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by CharmingWong on 2017/5/31.
@@ -33,7 +33,8 @@ public class BingApi implements BaseApi {
     }
 
     private BingApi() {
-        jsonRequestService = ApiManager.getInstance().getJsonRequestService(BingConverterFactory.create());
+        jsonRequestService = ApiManager.getInstance()
+            .getJsonRequestService(BingConverterFactory.create());
     }
 
     private QueryListener mQueryListener;
@@ -70,27 +71,29 @@ public class BingApi implements BaseApi {
         } else {
             url = BASE_URL + NEXT_URL;
         }
-        call = jsonRequestService.getBingImages(url);
-        call.enqueue(new Callback<List<QImage>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<QImage>> call, @NonNull Response<List<QImage>> response) {
-                List<QImage> QImages = response.body();
-                if (response.isSuccessful() && QImages != null) {
-                    mQueryListener.onSearchCompleted(requestCode, QImages);
-                    mLastQueryResult = new QueryResult(QImages);
-                    lastQuery = query + index;
-                } else {
-                    Log.i(TAG, "onResponse: responseCode = " + response.code());
-                    Log.i(TAG, "onResponse: json null");
-                    mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+        jsonRequestService.getBingImages(url)
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnNext(new Consumer<List<QImage>>() {
+                @Override
+                public void accept(List<QImage> qImages) {
+                    if (qImages != null && !qImages.isEmpty()) {
+                        mQueryListener.onSearchCompleted(requestCode, qImages);
+                        mLastQueryResult = new QueryResult(qImages);
+                        lastQuery = query + index;
+                    } else {
+                        Log.i(TAG, "onResponse: json null");
+                        mQueryListener.onSearchFailed(requestCode, ERROR_JSON);
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<List<QImage>> call, @NonNull Throwable t) {
-                mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
-            }
-        });
+            })
+            .doOnError(new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) throws Exception {
+                    mQueryListener.onSearchFailed(requestCode, ERROR_NETWORK);
+                }
+            })
+            .subscribe();
     }
 
     private static class QueryResult {

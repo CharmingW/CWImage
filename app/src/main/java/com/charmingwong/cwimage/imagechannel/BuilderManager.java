@@ -57,7 +57,7 @@ public class BuilderManager {
         radius = (int) (50 * density);
         imageRect = new Rect(0, 0, radius * 2, radius * 2);
         textColor = parent.getResources().getColor(R.color.boom_menu_text);
-        mBoomMenuButton = (BoomMenuButton) parent.findViewById(R.id.channel_bmb);
+        mBoomMenuButton = parent.findViewById(R.id.channel_bmb);
         mBoomMenuButton.setInFragment(true);
         mBoomMenuButton.setNormalColor(parent.getResources().getColor(R.color.colorPrimaryDark));
         mBoomMenuButton.setShowRotateEaseEnum(EaseEnum.EaseInOutCirc);

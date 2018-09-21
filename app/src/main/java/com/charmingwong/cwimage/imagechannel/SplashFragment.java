@@ -22,7 +22,7 @@ public class SplashFragment extends Fragment {
   @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    final View rootView = inflater.inflate(R.layout.fragment_splash, null);
+    final View rootView = inflater.inflate(R.layout.fragment_splash, container, false);
     ImageView welcomeImage = (ImageView) rootView.findViewById(R.id.welcomeImage);
     SharedPreferences sharedPreferences = getActivity()
         .getSharedPreferences("welcome_image_pref", Context.MODE_PRIVATE);
