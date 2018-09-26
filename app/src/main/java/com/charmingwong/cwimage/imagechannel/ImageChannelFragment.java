@@ -66,6 +66,8 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
     private final ChannelItemFragment[] CHANNEL_ITEM_FRAGMENTS = new ChannelItemFragment[CHANNEL_TITLES.length];
 
+    private int mFragmentCount = 0;
+
     private static final String TAG = "ImageChannelFragment";
 
     private ImageChannelContract.Presenter mPresenter;
@@ -79,7 +81,6 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
     private int mCurrentChannel = 0;
 
     private int mCurrentTag;
-
 
     @Override
     public int getCurrentChannelImageLastIndex() {
@@ -101,20 +102,14 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mChannelPagerAdapter = new ChannelPagerAdapter(getFragmentManager());
+        mChannelPagerAdapter = new ChannelPagerAdapter(getChildFragmentManager());
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        for (int i = 0; i < CHANNEL_ITEM_FRAGMENTS.length; i++) {
-//            ChannelItemFragment fragment = CHANNEL_ITEM_FRAGMENTS[i];
-//            if (fragment != null) {
-//                outState.putParcelableArrayList(CHANNEL_TITLES[i],
-//                    (ArrayList<? extends Parcelable>) fragment.mChannelImageListAdapter.mChannelImages);
-//            }
-//        }
-//    }
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
+        CHANNEL_ITEM_FRAGMENTS[mFragmentCount++] = (ChannelItemFragment) childFragment;
+    }
 
     private ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -161,7 +156,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         ViewPager viewPager = rootView.findViewById(R.id.channelPager);
         viewPager.setAdapter(mChannelPagerAdapter);
 
-        TabLayout tabLayout = ((Activity) container.getContext()).findViewById(R.id.channelTabs);
+        TabLayout tabLayout = getActivity().findViewById(R.id.channelTabs);
         tabLayout.setupWithViewPager(viewPager);
 
         viewPager.addOnPageChangeListener(mPageChangeListener);
@@ -346,6 +341,11 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
                 .newInstance(position, mChangeChannelImagesCountListener);
             CHANNEL_ITEM_FRAGMENTS[position] = fragment;
             return fragment;
+        }
+
+        @Override
+        public void startUpdate(ViewGroup container) {
+            super.startUpdate(container);
         }
 
         @Override

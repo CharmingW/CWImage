@@ -11,7 +11,7 @@ greendao {
 android {
 
     compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    buildToolsVersion '27.0.3'
 
     defaultConfig {
         applicationId "com.charmingwong.cwimage"
@@ -40,11 +40,7 @@ android {
 
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
-            def outputFile = output.outputFile
-            if (outputFile != null && outputFile.name.endsWith('.apk') && outputFile.name.contains("debug")) {
-                // 这里修改apk文件名
-                outputFileName = outputFile.name.replace("app", "CWImage_${defaultConfig.versionName}_${buildTime()}").replace("-debug", "")
-            }
+            outputFileName = "CWImage_${defaultConfig.versionName}_${buildTime()}.apk"
         }
     }
 
@@ -67,7 +63,12 @@ dependencies {
     implementation 'com.yalantis:ucrop:2.2.0'
     implementation 'com.github.arimorty:floatingsearchview:2.0.4'
     implementation 'com.github.chrisbanes.photoview:library:1.2.4'
-    //noinspection GradleCompatible
+    implementation 'com.yalantis:ucrop:2.2.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+    implementation 'com.github.arimorty:floatingsearchview:2.0.4'
+    implementation 'com.github.chrisbanes.photoview:library:1.2.4'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:design:27.1.1'

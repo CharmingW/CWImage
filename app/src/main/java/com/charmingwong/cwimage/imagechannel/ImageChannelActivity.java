@@ -109,12 +109,12 @@ public class ImageChannelActivity extends BaseActivity
 
     private void init() {
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setTitle("");
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
             this, drawer, toolbar, R.string.navigation_drawer_open,
             R.string.navigation_drawer_close);
@@ -128,15 +128,10 @@ public class ImageChannelActivity extends BaseActivity
             }
         });
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         findViewById(R.id.action_camera).setOnClickListener(this);
-
-//        ImageView imageView = (ImageView) findViewById(R.id.bar_image);
-//        Glide.with(this)
-//            .load(R.drawable.ic_bar_2)
-//            .into(imageView);
 
         ImageChannelFragment fragment = (ImageChannelFragment) getSupportFragmentManager()
             .findFragmentById(R.id.contentFrame);
@@ -343,7 +338,7 @@ public class ImageChannelActivity extends BaseActivity
             startActivity(intent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
