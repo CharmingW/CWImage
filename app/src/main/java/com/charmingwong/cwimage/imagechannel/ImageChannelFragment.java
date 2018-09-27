@@ -40,6 +40,7 @@ import com.charmingwong.cwimage.imagedetails.ImageDetailsActivity;
 import com.charmingwong.cwimage.search.SearchActivity;
 import com.charmingwong.cwimage.util.ApplicationUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -100,12 +101,6 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mChannelPagerAdapter = new ChannelPagerAdapter(getChildFragmentManager());
-    }
-
-    @Override
     public void onAttachFragment(Fragment childFragment) {
         super.onAttachFragment(childFragment);
         CHANNEL_ITEM_FRAGMENTS[mFragmentCount++] = (ChannelItemFragment) childFragment;
@@ -154,6 +149,9 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
         //ViewPager
         ViewPager viewPager = rootView.findViewById(R.id.channelPager);
+        mChannelPagerAdapter = new ChannelPagerAdapter(getChildFragmentManager());
+        mChannelPagerAdapter.setTitles(Arrays.asList(CHANNEL_TITLES));
+        mChannelPagerAdapter.setChangeChannelImagesCountListener(mChangeChannelImagesCountListener);
         viewPager.setAdapter(mChannelPagerAdapter);
 
         TabLayout tabLayout = getActivity().findViewById(R.id.channelTabs);
@@ -200,7 +198,6 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPresenter.start();
     }
 
     private void setupBoomMenu(View parent) {
@@ -283,8 +280,7 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
 
     private ChannelImageListAdapter getChannelImageListAdapter(int channel) {
         if (CHANNEL_ITEM_FRAGMENTS[channel] == null) {
-            CHANNEL_ITEM_FRAGMENTS[channel] = ChannelItemFragment
-                .newInstance(channel, mChangeChannelImagesCountListener);
+            CHANNEL_ITEM_FRAGMENTS[channel] = ChannelItemFragment.newInstance(channel, mChangeChannelImagesCountListener);
         }
         View view = CHANNEL_ITEM_FRAGMENTS[channel].getView();
         if (view == null) {
@@ -315,348 +311,11 @@ public class ImageChannelFragment extends Fragment implements ImageChannelContra
         return CHANNEL_ITEM_FRAGMENTS[channel].getArguments();
     }
 
-    interface ChangeChannelImagesCountListener {
-
-        void updateChannelImagesCount();
-    }
-
-    private ChangeChannelImagesCountListener mChangeChannelImagesCountListener = new ChangeChannelImagesCountListener() {
+    private ChannelItemFragment.ChangeChannelImagesCountListener mChangeChannelImagesCountListener = new ChannelItemFragment.ChangeChannelImagesCountListener() {
         @Override
         public void updateChannelImagesCount() {
             mPresenter.query(mCurrentChannel, mCurrentTag);
             getChannelFragmentArgs(mCurrentChannel).putBoolean("isLoading", true);
         }
     };
-
-    private class ChannelPagerAdapter extends FragmentPagerAdapter {
-
-        ChannelPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            Log.d(TAG, "getItem: ");
-            ChannelItemFragment fragment = ChannelItemFragment
-                .newInstance(position, mChangeChannelImagesCountListener);
-            CHANNEL_ITEM_FRAGMENTS[position] = fragment;
-            return fragment;
-        }
-
-        @Override
-        public void startUpdate(ViewGroup container) {
-            super.startUpdate(container);
-        }
-
-        @Override
-        public int getCount() {
-            return CHANNEL_TITLES.length;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return CHANNEL_TITLES[position];
-        }
-    }
-
-    public static class ChannelItemFragment extends Fragment {
-
-        private ChannelImageListAdapter mChannelImageListAdapter;
-
-        private ChangeChannelImagesCountListener mListener;
-
-        public static ChannelItemFragment newInstance(
-            int position,
-            ChangeChannelImagesCountListener listener) {
-            Log.d(TAG, "newInstance: ");
-            ChannelItemFragment fragment = new ChannelItemFragment();
-            fragment.setListener(listener);
-            Bundle args = new Bundle();
-            args.putInt("num", position);
-            args.putInt("image_last_index", 0);
-            args.putBoolean("isLoading", false);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public ChannelItemFragment() {
-        }
-
-        public void setListener(ChangeChannelImagesCountListener listener) {
-            mListener = listener;
-        }
-
-        @Override
-        public void onSaveInstanceState(@NonNull Bundle outState) {
-            super.onSaveInstanceState(outState);
-            Log.d(TAG, "onSaveInstanceState: ");
-            outState.putBundle("args", getArguments());
-        }
-
-        @Override
-        public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-            super.onViewStateRestored(savedInstanceState);
-            Log.d(TAG, "onViewStateRestored: ");
-            if (savedInstanceState != null) {
-                setArguments(savedInstanceState.getBundle("args"));
-            }
-        }
-
-        @Override
-        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-            super.onActivityCreated(savedInstanceState);
-            Log.d(TAG, "onActivityCreated: ");
-            int position = getArguments() != null ? getArguments().getInt("num") : 0;
-            Presenter presenter = ((ImageChannelActivity) getActivity()).getPresenter();
-            presenter.query(position, initTagByPosition(position));
-        }
-
-        private int initTagByPosition(int position) {
-            switch (position) {
-                case 0:
-                    return 599;
-                case 1:
-                    return 1993;
-                case 2:
-                    return 92;
-                case 3:
-                    return 234;
-                case 4:
-                    return 208;
-                case 5:
-                    return 1806;
-                case 6:
-                    return 309;
-                case 7:
-                    return 187;
-                case 8:
-                    return 222;
-                case 9:
-                    return 244;
-                case 10:
-                    return 592;
-                case 11:
-                    return 148;
-                case 12:
-                    return 1802;
-            }
-            return -1;
-        }
-
-        @Override
-        public void onCreate(@Nullable Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            mChannelImageListAdapter = new ChannelImageListAdapter(getActivity());
-        }
-
-        @Nullable
-        @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, final ViewGroup container,
-            @Nullable Bundle savedInstanceState) {
-            Log.d(TAG, "onCreateView: ");
-            final View rootView = inflater
-                .inflate(R.layout.fragment_image_channel_item, container, false);
-
-            RecyclerView channelImageList = rootView
-                .findViewById(R.id.channelImageList);
-            channelImageList.setLayoutManager(
-                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL) {
-                    @Override
-                    public void smoothScrollToPosition(RecyclerView recyclerView,
-                        RecyclerView.State state,
-                        int position) {
-                        LinearSmoothScroller scroller = new LinearSmoothScroller(
-                            container.getContext()) {
-                            @Override
-                            protected int calculateTimeForScrolling(int dx) {
-
-                                if (dx > 2500) {
-                                    dx = 2500;
-                                }
-                                return super.calculateTimeForScrolling(dx);
-                            }
-                        };
-                        scroller.setTargetPosition(0);
-                        startSmoothScroll(scroller);
-                    }
-                });
-            channelImageList.setAdapter(mChannelImageListAdapter);
-
-            channelImageList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-                    if (layoutManager instanceof StaggeredGridLayoutManager) {
-                        StaggeredGridLayoutManager staggeredGridLayoutManager = (StaggeredGridLayoutManager) layoutManager;
-                        int[] lastVisibleIndexes = new int[3];
-                        staggeredGridLayoutManager.findLastVisibleItemPositions(lastVisibleIndexes);
-                        int size = mChannelImageListAdapter.getItemCount();
-                        boolean isLoading = getArguments() != null && getArguments().getBoolean("isLoading");
-                        if ((lastVisibleIndexes[0] == size - 1
-                            || lastVisibleIndexes[1] == size - 1
-                            || lastVisibleIndexes[2] == size - 1) && !isLoading) {
-                            mListener.updateChannelImagesCount();
-                        }
-                    }
-                }
-            });
-
-            channelImageList.addItemDecoration(new RecyclerView.ItemDecoration() {
-                @Override
-                public void getItemOffsets(Rect outRect, View view, RecyclerView parent,
-                    RecyclerView.State state) {
-                    int density = ApplicationUtils.getDisplayDensity();
-                    outRect.set(density, density, density, density);
-                }
-
-            });
-
-            return rootView;
-        }
-
-    }
-
-    private static class ChannelImageListAdapter extends
-        RecyclerView.Adapter<ChannelImageListAdapter.ChannelImageViewHolder> {
-
-        private List<ChannelImage> mChannelImages;
-
-        private Context mContext;
-
-        ChannelImageListAdapter(Context context) {
-            mContext = context;
-            mChannelImages = new ArrayList<>(0);
-        }
-
-        void appendImages(List<ChannelImage> channelImages) {
-            int size = getItemCount();
-            mChannelImages.addAll(channelImages);
-            notifyItemInserted(size);
-        }
-
-        void replaceData(List<ChannelImage> channelImages) {
-            mChannelImages.clear();
-            mChannelImages.addAll(channelImages);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public int getItemCount() {
-            return mChannelImages.size();
-        }
-
-        @NonNull
-        @Override
-        public ChannelImageViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
-            final View rootView = ((Activity) parent.getContext())
-                .getLayoutInflater()
-                .inflate(R.layout.item_image_channel, parent, false);
-
-            rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(mContext, ImageDetailsActivity.class);
-                    int maxSize = Math.min(getItemCount(), 1000);
-                    int offset = getItemCount() - maxSize;
-                    List<ChannelImage> data = new ArrayList<>(maxSize);
-                    for (int i = offset; i < getItemCount(); i++) {
-                        data.add(mChannelImages.get(i));
-                    }
-                    int position = (Integer) v.findViewById(R.id.resolution).getTag() - offset;
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelableArrayList("data", (ArrayList<? extends Parcelable>) data);
-                    bundle.putInt("position", position);
-                    intent.putExtras(bundle);
-                    mContext.startActivity(intent);
-                }
-            });
-
-            rootView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-
-                    int position = (int) v.findViewById(R.id.resolution).getTag();
-
-                    FragmentManager fm = ((AppCompatActivity) mContext).getSupportFragmentManager();
-                    final ImageDialog dialog = ImageDialog.newInstance(mChannelImages.get(position));
-
-                    dialog.show(fm, "dialog");
-
-                    v.onTouchEvent(
-                        MotionEvent
-                            .obtain(0, 0, MotionEvent.ACTION_CANCEL, v.getPivotX(), v.getPivotY(),
-                                0));
-
-                    return true;
-                }
-            });
-
-            rootView.setClipToOutline(true);
-
-            return new ChannelImageViewHolder(rootView);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull final ChannelImageViewHolder holder, int position) {
-            final ChannelImage channelImage = mChannelImages.get(position);
-            float density = Resources.getSystem().getDisplayMetrics().density;
-            int width = (int) (178 * density);
-            int height = width
-                * channelImage.getHeight()
-                / channelImage.getWidth();
-
-            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) holder.image
-                .getLayoutParams();
-//            lp.width = width;
-            lp.height = height;
-
-            String thumbUrl = channelImage.getThumbUrl();
-            String url = channelImage.getUrl();
-
-            if (url.toLowerCase().endsWith(".gif") || thumbUrl.toLowerCase().endsWith(".gif")) {
-                holder.type.setText("GIF");
-                Glide.with(mContext)
-                    .load(url)
-                    .asBitmap()
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(holder.image);
-            } else {
-                Glide.with(mContext)
-                    .load(thumbUrl)
-                    .asBitmap()
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .into(holder.image);
-            }
-
-            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.layout
-                .getLayoutParams();
-            layoutParams.width = width;
-
-            holder.resolution.setText(channelImage.getWidth() + " x " + channelImage.getHeight());
-
-            holder.resolution.setTag(position);
-        }
-
-        static class ChannelImageViewHolder extends RecyclerView.ViewHolder {
-
-            ImageView image;
-
-            TextView resolution;
-
-            TextView type;
-
-            FrameLayout layout;
-
-            ChannelImageViewHolder(View itemView) {
-                super(itemView);
-                image = itemView.findViewById(R.id.image);
-                resolution = itemView.findViewById(R.id.resolution);
-                type = itemView.findViewById(R.id.type);
-                layout = itemView.findViewById(R.id.tagLayout);
-            }
-        }
-    }
-
 }
