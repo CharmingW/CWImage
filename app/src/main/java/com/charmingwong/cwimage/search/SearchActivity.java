@@ -1,6 +1,8 @@
 package com.charmingwong.cwimage.search;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+
 import com.charmingwong.cwimage.base.BaseActivity;
 import com.charmingwong.cwimage.R;
 import com.charmingwong.cwimage.dao.DaoManager;
@@ -15,17 +17,21 @@ public class SearchActivity extends BaseActivity {
     private ActivityActionListener mListener;
 
     @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if (fragment instanceof SearchContract.View) {
+            new SearchPresenter((SearchContract.View) fragment, DaoManager.getInstance(getApplicationContext()));
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-        SearchFragment fragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-
-        if (fragment == null) {
-            fragment = new SearchFragment();
+        if (savedInstanceState == null) {
+            SearchFragment fragment = new SearchFragment();
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
         }
-        new SearchPresenter(fragment, DaoManager.getInstance(getApplicationContext()));
     }
 
     @Override
@@ -36,7 +42,6 @@ public class SearchActivity extends BaseActivity {
         }
 
     }
-
 
     interface ActivityActionListener {
         boolean canGoBack();

@@ -84,14 +84,14 @@ public class ImageDetailsFragment extends Fragment implements ImageDetailsContra
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_image_details, container, false);
 
-        mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+        mViewPager = rootView.findViewById(R.id.view_pager);
         mViewPager.setAdapter(mImageDetailsAdapter);
         mViewPager.setOffscreenPageLimit(0);
 
         int current = getArguments().getInt("position");
         mViewPager.setCurrentItem(current);
 
-        mPageIndicator = (TextView) rootView.findViewById(R.id.page_indicator);
+        mPageIndicator = rootView.findViewById(R.id.page_indicator);
         mPageIndicator.setText((current + 1) + "/" + pageCount);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -114,6 +114,11 @@ public class ImageDetailsFragment extends Fragment implements ImageDetailsContra
         setUpFloatingActionMenu();
 
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -362,10 +367,10 @@ public class ImageDetailsFragment extends Fragment implements ImageDetailsContra
         public Object instantiateItem(ViewGroup container, int position) {
             final View rootView = LayoutInflater.from(getActivity()).inflate(R.layout.item_image_details, container, false);
 
-            final ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+            final ProgressBar progressBar = rootView.findViewById(R.id.progressBar);
             progressBar.setVisibility(View.VISIBLE);
 
-            final PhotoView photoView = (PhotoView) rootView.findViewById(R.id.photo_view);
+            final PhotoView photoView = rootView.findViewById(R.id.photo_view);
             final BaseModel baseModel = mBaseModels.get(position);
 
 

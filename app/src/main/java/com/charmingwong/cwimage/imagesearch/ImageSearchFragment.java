@@ -110,30 +110,35 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mCurrentQuery = getArguments().getString("query");
-
+        Bundle args = getArguments();
+        if (args != null) {
+            mCurrentQuery = getArguments().getString("query");
+        }
         setHasOptionsMenu(true);
         mQImages = new ArrayList<>(0);
         mPositions = new ArrayList<>(0);
         mSearchImagesListAdapter = new SearchImagesListAdapter();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mPresenter.searchImages(mCurrentQuery);
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_image_search, container, false);
-
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
-
-        mImagesList = (RecyclerView) rootView.findViewById(R.id.image_list);
+        mProgressBar = rootView.findViewById(R.id.progressBar);
+        mImagesList = rootView.findViewById(R.id.image_list);
         mImagesList.setAdapter(mSearchImagesListAdapter);
         mImagesList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL) {
             @Override
             public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
-
+                if (getActivity() == null) {
+                    return;
+                }
                 LinearSmoothScroller scroller = new LinearSmoothScroller(getActivity()) {
                     @Override
                     protected int calculateTimeForScrolling(int dx) {
@@ -224,8 +229,7 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
 
         inflater.inflate(R.menu.menu_image_search, menu);
 
-        SearchManager searchManager =
-                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
         final MenuItem searchItem = menu.findItem(R.id.action_search);
 
@@ -464,7 +468,7 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
         }
 
         @Override
-        public SearchImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public SearchImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             final View rootView = ((Activity) parent.getContext())
                     .getLayoutInflater()
                     .inflate(R.layout.item_image_search, parent, false);
@@ -491,6 +495,9 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
             rootView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    if (getActivity() == null) {
+                        return false;
+                    }
 
                     int position = (int) v.findViewById(R.id.resolution).getTag();
 
@@ -510,7 +517,7 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
         }
 
         @Override
-        public void onBindViewHolder(final SearchImageViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final SearchImageViewHolder holder, int position) {
             final QImage QImage = mQImages.get(mPositions.get(position));
             float density = Resources.getSystem().getDisplayMetrics().density;
             int width = (int) (178 * density);
@@ -562,10 +569,10 @@ public class ImageSearchFragment extends Fragment implements ImageSearchContract
 
             SearchImageViewHolder(View itemView) {
                 super(itemView);
-                image = (ImageView) itemView.findViewById(R.id.image);
-                resolution = (TextView) itemView.findViewById(R.id.resolution);
-                type = (TextView) itemView.findViewById(R.id.type);
-                layout = (FrameLayout) itemView.findViewById(R.id.tagLayout);
+                image = itemView.findViewById(R.id.image);
+                resolution = itemView.findViewById(R.id.resolution);
+                type = itemView.findViewById(R.id.type);
+                layout = itemView.findViewById(R.id.tagLayout);
             }
         }
     }

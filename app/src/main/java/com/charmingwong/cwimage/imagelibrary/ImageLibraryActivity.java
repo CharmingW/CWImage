@@ -1,6 +1,7 @@
 package com.charmingwong.cwimage.imagelibrary;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
@@ -23,16 +24,18 @@ public class ImageLibraryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_library);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("");
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            actionBar.setTitle("");
+        }
 
-        ImageView imageView = (ImageView) findViewById(R.id.bar_image);
+        ImageView imageView = findViewById(R.id.bar_image);
         Glide.with(this)
                 .load(R.drawable.ic_bar_1)
                 .into(imageView);
-
 
         ImageLibraryFragment fragment = (ImageLibraryFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (fragment == null) {
@@ -47,7 +50,7 @@ public class ImageLibraryActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!mListener.canGoBack()) {
+        if (mListener != null && !mListener.canGoBack()) {
             super.onBackPressed();
         }
     }

@@ -1,6 +1,7 @@
 package com.charmingwong.cwimage.imagesearch;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,27 +29,35 @@ public class ImageSearchActivity extends BaseActivity {
         getTheme().applyStyle(R.style.cursor, true);
 
         setContentView(R.layout.activity_image_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_HOME_AS_UP);
+        }
 
-        ImageView imageView = (ImageView) findViewById(R.id.bar_image);
+        ImageView imageView = findViewById(R.id.bar_image);
         Glide.with(this)
                 .load(R.drawable.ic_bar_3)
                 .into(imageView);
 
         Bundle bundle = getIntent().getExtras();
+        if (bundle == null) {
+            return;
+        }
 
         String query = bundle.getString("query");
         getSupportActionBar().setTitle(query);
 
-        ImageSearchFragment fragment = (ImageSearchFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (fragment == null) {
+        ImageSearchFragment fragment;
+        if (savedInstanceState == null) {
             fragment = ImageSearchFragment.newInstance();
             fragment.setArguments(bundle);
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
+        } else {
+             fragment = (ImageSearchFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         }
 
         BaseApi api;

@@ -1,6 +1,7 @@
 package com.charmingwong.cwimage.wallpaper;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
@@ -15,12 +16,15 @@ public class WallpaperActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallpaper);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("");
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            actionBar.setTitle("");
+        }
 
-        ImageView imageView= (ImageView) findViewById(R.id.bar_image);
+        ImageView imageView= findViewById(R.id.bar_image);
         Glide.with(this)
                 .load(R.drawable.ic_bar)
                 .into(imageView);

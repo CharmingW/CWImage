@@ -108,9 +108,9 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
 
-        mSearchView = (FloatingSearchView) rootView.findViewById(R.id.floating_search_view);
+        mSearchView = rootView.findViewById(R.id.floating_search_view);
 
-        RecyclerView hotList = (RecyclerView) rootView.findViewById(R.id.hot_list);
+        RecyclerView hotList = rootView.findViewById(R.id.hot_list);
 
         mHotSearchListAdapter = new HotSearchListAdapter();
         hotList.setAdapter(mHotSearchListAdapter);
@@ -136,7 +136,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
             }
         };
 
-        RecyclerView wallpaperTagList = (RecyclerView) rootView.findViewById(R.id.wallpaper_tag_list);
+        RecyclerView wallpaperTagList = rootView.findViewById(R.id.wallpaper_tag_list);
         TagsListAdapter wallpaperTagsListAdapter = new TagsListAdapter();
         List<String> tags = Arrays.asList(getResources().getStringArray(R.array.wallpaper_channel));
         wallpaperTagsListAdapter.setTags(tags);
@@ -145,7 +145,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
         wallpaperTagList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL));
         wallpaperTagList.addItemDecoration(itemDecorationTag);
 
-        RecyclerView tagList = (RecyclerView) rootView.findViewById(R.id.tag_list);
+        RecyclerView tagList = rootView.findViewById(R.id.tag_list);
         mTagsListAdapter = new TagsListAdapter();
         tagList.setAdapter(mTagsListAdapter);
         tagList.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL));
@@ -166,7 +166,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mSearchView = (FloatingSearchView) view.findViewById(R.id.floating_search_view);
+        mSearchView = view.findViewById(R.id.floating_search_view);
         setupSearchView();
 
         mSearchInput = (EditText) mSearchView.findViewById(R.id.search_bar_text);
@@ -249,9 +249,9 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
             }
         });
 
-        mDrawerLayout = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
+        mDrawerLayout = getActivity().findViewById(R.id.drawer_layout);
         mSearchView.attachNavigationDrawerToMenuButton(mDrawerLayout);
-        NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+        NavigationView navigationView = getActivity().findViewById(R.id.nav_view);
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -502,9 +502,9 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
             public HotSearchViewHolder(View itemView) {
                 super(itemView);
 
-                image = (ImageView) itemView.findViewById(R.id.image);
+                image = itemView.findViewById(R.id.image);
 
-                query = (TextView) itemView.findViewById(R.id.query);
+                query = itemView.findViewById(R.id.query);
             }
         }
     }
@@ -567,7 +567,7 @@ public class SearchFragment extends Fragment implements SearchContract.View, Sea
 
             public TagsViewHolder(View itemView) {
                 super(itemView);
-                tag = (TextView) itemView.findViewById(R.id.tag);
+                tag = itemView.findViewById(R.id.tag);
             }
         }
     }

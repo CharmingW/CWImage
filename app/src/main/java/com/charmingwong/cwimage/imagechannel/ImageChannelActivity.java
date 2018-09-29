@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -52,6 +54,14 @@ public class ImageChannelActivity extends BaseActivity
     private Presenter mPresenter;
 
     @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        if (fragment instanceof ImageChannelContract.View) {
+            mPresenter = new ImageChannelPresenter((ImageChannelContract.View) fragment);
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_channel);
@@ -63,61 +73,23 @@ public class ImageChannelActivity extends BaseActivity
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-
-//        final SplashFragment splashFragment = new SplashFragment();
-//        ActivityUtils
-//            .addFragmentToActivity(getSupportFragmentManager(), splashFragment, R.id.welcome);
-
-//        getWindow().getDecorView().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                final View contentView = getLayoutInflater()
-//                    .inflate(R.layout.activity_image_channel, null);
-//                ((FrameLayout) findViewById(R.id.content)).addView(contentView);
-//                init();
-//            }
-//        }, 1000);
-//
-//        getWindow().getDecorView().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//
-//                Animator animator = AnimatorInflater
-//                    .loadAnimator(ImageChannelActivity.this, R.animator.fragment_disappearing);
-//                animator.setTarget(splashFragment.getView());
-//                animator.start();
-//
-//                animator.addListener(new AnimatorListenerAdapter() {
-//                    @Override
-//                    public void onAnimationEnd(Animator animator) {
-//                        try {
-//                            FragmentTransaction ft = ImageChannelActivity.this
-//                                .getSupportFragmentManager()
-//                                .beginTransaction();
-//                            ft.remove(splashFragment);
-//                            ft.commit();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                });
-//            }
-//        }, 3000);
+        if (savedInstanceState == null) {
+            ImageChannelFragment fragment = ImageChannelFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
+        }
     }
 
     private void init() {
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setTitle("");
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("");
+        }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-            this, drawer, toolbar, R.string.navigation_drawer_open,
-            R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         toggle.setDrawerSlideAnimationEnabled(false);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
@@ -132,15 +104,6 @@ public class ImageChannelActivity extends BaseActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         findViewById(R.id.action_camera).setOnClickListener(this);
-
-        ImageChannelFragment fragment = (ImageChannelFragment) getSupportFragmentManager()
-            .findFragmentById(R.id.contentFrame);
-        if (fragment == null) {
-            fragment = ImageChannelFragment.newInstance();
-            ActivityUtils
-                .addFragmentToActivity(getSupportFragmentManager(), fragment, R.id.contentFrame);
-        }
-        mPresenter = new ImageChannelPresenter(fragment);
     }
 
     public Presenter getPresenter() {

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -73,20 +74,27 @@ public class WallpaperDetailsFragment extends Fragment implements WallpaperDetai
         super.onCreate(savedInstanceState);
         mWallPaperDetailsAdapter = new WallPaperDetailsAdapter();
         mWallpapers = new SparseArray<>(mCount);
+    }
 
-        mPresenter.loadStartUrl(getArguments().getString("detailsUrl"));
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            mPresenter.loadStartUrl(getArguments().getString("detailsUrl"));
+        }
     }
 
     @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         final View rootView = inflater.inflate(R.layout.fragment_image_details, container, false);
 
-        mViewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
+        mViewPager = rootView.findViewById(R.id.view_pager);
         mViewPager.setOffscreenPageLimit(0);
 
-        mPageIndicator = (TextView) rootView.findViewById(R.id.page_indicator);
+        mPageIndicator = rootView.findViewById(R.id.page_indicator);
 
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

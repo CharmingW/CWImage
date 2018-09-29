@@ -79,7 +79,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_image_library, container, false);
-        mViewPager = (ViewPager) rootView.findViewById(R.id.channelPager);
+        mViewPager = rootView.findViewById(R.id.channelPager);
         mViewPager.setAdapter(mImageLibraryAdapter);
         mViewPager.setOffscreenPageLimit(2);
         int current = getArguments().getInt("page", 0);
@@ -107,10 +107,10 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
             }
         });
 
-        TabLayout tabLayout = (TabLayout) rootView.findViewById(R.id.tabLayout);
+        TabLayout tabLayout = rootView.findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(mViewPager);
 
-        mFabDelete = (FloatingActionButton) getActivity().findViewById(R.id.fab_delete);
+        mFabDelete = getActivity().findViewById(R.id.fab_delete);
         mFabDelete.setVisibility(View.GONE);
         mFabDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,10 +119,10 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                 List<Integer> indexes = new ArrayList<>();
 
                 int current = mViewPager.getCurrentItem();
-                RecyclerView list = ((RecyclerView) mViewPager.findViewWithTag(current).findViewById(R.id.dataList));
+                RecyclerView list = mViewPager.findViewWithTag(current).findViewById(R.id.dataList);
                 StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) list.getLayoutManager();
                 for (int i = 0; i < layoutManager.getChildCount(); i++) {
-                    CheckBox checkBox = (CheckBox) layoutManager.getChildAt(i).findViewById(R.id.checkbox);
+                    CheckBox checkBox = layoutManager.getChildAt(i).findViewById(R.id.checkbox);
                     if (checkBox.isChecked()) {
                         indexes.add(i);
                     }
@@ -185,23 +185,63 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
 
     @Override
     public void showDownloads(List<BaseModel> baseModels) {
-        ImagesListAdapter adapter = (ImagesListAdapter) (((RecyclerView) mViewPager.findViewWithTag(TYPE_DOWNLOAD).findViewById(R.id.dataList)).getAdapter());
+        final View rootView = mViewPager.findViewWithTag(TYPE_DOWNLOAD);
+        if (rootView == null) {
+            ImageLibraryAdapter libraryAdapter = (ImageLibraryAdapter) mViewPager.getAdapter();
+            if (libraryAdapter != null) {
+                libraryAdapter.setDownloadModels(baseModels);
+            }
+            return;
+        }
+        ImagesListAdapter adapter = (ImagesListAdapter) ((RecyclerView) rootView.findViewById(R.id.dataList)).getAdapter();
         adapter.notifyDataChange(baseModels);
     }
 
     @Override
     public void showCollection(List<BaseModel> baseModels) {
-        ImagesListAdapter adapter = (ImagesListAdapter) (((RecyclerView) mViewPager.findViewWithTag(TYPE_COLLECTION).findViewById(R.id.dataList)).getAdapter());
+        final View rootView = mViewPager.findViewWithTag(TYPE_COLLECTION);
+        if (rootView == null) {
+            ImageLibraryAdapter libraryAdapter = (ImageLibraryAdapter) mViewPager.getAdapter();
+            if (libraryAdapter != null) {
+                libraryAdapter.setCollectionModels(baseModels);
+            }
+            return;
+        }
+        ImagesListAdapter adapter = (ImagesListAdapter) ((RecyclerView) rootView.findViewById(R.id.dataList)).getAdapter();
         adapter.notifyDataChange(baseModels);
     }
 
     @Override
     public void showCollectedTags(List<CollectionTag> tags) {
-        TagsListAdapter adapter = (TagsListAdapter) (((RecyclerView) mViewPager.findViewWithTag(TYPE_TAG).findViewById(R.id.dataList)).getAdapter());
+        final View rootView = mViewPager.findViewWithTag(TYPE_TAG);
+        if (rootView == null) {
+            ImageLibraryAdapter libraryAdapter = (ImageLibraryAdapter) mViewPager.getAdapter();
+            if (libraryAdapter != null) {
+                libraryAdapter.setTagModels(tags);
+            }
+            return;
+        }
+        TagsListAdapter adapter = (TagsListAdapter) ((RecyclerView) rootView.findViewById(R.id.dataList)).getAdapter();
         adapter.notifyDataChange(tags);
     }
 
     private class ImageLibraryAdapter extends PagerAdapter {
+
+        private List<BaseModel> mDownloadModels;
+        private List<BaseModel> mCollectionModels;
+        private List<CollectionTag> mTagModels;
+
+        public void setDownloadModels(List<BaseModel> downloadModels) {
+            mDownloadModels = downloadModels;
+        }
+
+        public void setCollectionModels(List<BaseModel> collectionModels) {
+            mCollectionModels = collectionModels;
+        }
+
+        public void setTagModels(List<CollectionTag> tagModels) {
+            mTagModels = tagModels;
+        }
 
         @Override
         public int getCount() {
@@ -212,7 +252,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, final int position) {
             final View rootView = LayoutInflater.from(container.getContext()).inflate(R.layout.item_library_pager, container, false);
-            final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.dataList);
+            final RecyclerView recyclerView = rootView.findViewById(R.id.dataList);
             recyclerView.setTag(R.id.dataList, false);
 
             recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -232,7 +272,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                     layoutManager.findLastVisibleItemPositions(l);
 
 
-                    CheckBox view1 = (CheckBox) layoutManager.findViewByPosition(f[0]).findViewById(R.id.checkbox);
+                    CheckBox view1 = layoutManager.findViewByPosition(f[0]).findViewById(R.id.checkbox);
                     if (view1 != null) {
                         if (isDeleting()) {
                             view1.setVisibility(View.VISIBLE);
@@ -241,7 +281,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                             view1.setChecked(false);
                         }
                     }
-                    CheckBox view2 = (CheckBox) layoutManager.findViewByPosition(f[1]).findViewById(R.id.checkbox);
+                    CheckBox view2 = layoutManager.findViewByPosition(f[1]).findViewById(R.id.checkbox);
                     if (view1 != null) {
                         if (isDeleting()) {
                             view2.setVisibility(View.VISIBLE);
@@ -250,7 +290,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                             view1.setChecked(false);
                         }
                     }
-                    CheckBox view3 = (CheckBox) layoutManager.findViewByPosition(l[0]).findViewById(R.id.checkbox);
+                    CheckBox view3 = layoutManager.findViewByPosition(l[0]).findViewById(R.id.checkbox);
                     if (view1 != null) {
                         if (isDeleting()) {
                             view3.setVisibility(View.VISIBLE);
@@ -259,7 +299,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                             view1.setChecked(false);
                         }
                     }
-                    CheckBox view4 = (CheckBox) layoutManager.findViewByPosition(l[1]).findViewById(R.id.checkbox);
+                    CheckBox view4 = layoutManager.findViewByPosition(l[1]).findViewById(R.id.checkbox);
                     if (view1 != null) {
                         if (isDeleting()) {
                             view4.setVisibility(View.VISIBLE);
@@ -280,7 +320,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                     }
                 });
             } else {
-                    recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
                     @Override
                     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                         int density = ApplicationUtils.getDisplayDensity();
@@ -293,27 +333,36 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                 ImagesListAdapter adapter;
                 if (position == TYPE_DOWNLOAD) {
                     adapter = new ImagesListAdapter();
+                    recyclerView.setAdapter(adapter);
+                    if (mDownloadModels != null) {
+                        adapter.notifyDataChange(mDownloadModels);
+                    }
                 } else {
                     adapter = new ImagesListAdapter();
+                    recyclerView.setAdapter(adapter);
+                    if (mCollectionModels != null) {
+                        adapter.notifyDataChange(mCollectionModels);
+                    }
                 }
-                recyclerView.setAdapter(adapter);
             } else {
                 TagsListAdapter adapter = new TagsListAdapter();
                 recyclerView.setAdapter(adapter);
+                if (mTagModels != null) {
+                    adapter.notifyDataChange(mTagModels);
+                }
             }
-
             rootView.setTag(position);
             container.addView(rootView);
             return rootView;
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView((View) object);
         }
 
         @Override
-        public boolean isViewFromObject(View view, Object object) {
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
             return view == object;
         }
 
@@ -351,8 +400,9 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
             }
         }
 
+        @NonNull
         @Override
-        public ImagesViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+        public ImagesViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
             View rootView;
             rootView = ((Activity) parent.getContext())
                     .getLayoutInflater()
@@ -367,11 +417,11 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                         parent.setTag(R.id.dataList, true);
                         StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) ((RecyclerView) parent).getLayoutManager();
                         for (int i = 0; i < layoutManager.getChildCount(); i++) {
-                            CheckBox box = (CheckBox) layoutManager.getChildAt(i).findViewById(R.id.checkbox);
+                            CheckBox box = layoutManager.getChildAt(i).findViewById(R.id.checkbox);
                             box.setVisibility(View.VISIBLE);
                             box.setChecked(false);
                         }
-                        CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkbox);
+                        CheckBox checkBox = v.findViewById(R.id.checkbox);
                         checkBox.setChecked(true);
                         int position = (int) checkBox.getTag(R.id.checkbox);
                         mIsCheckedList.set(position, true);
@@ -383,7 +433,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CheckBox checkBox = ((CheckBox) v.findViewById(R.id.checkbox));
+                    CheckBox checkBox = v.findViewById(R.id.checkbox);
                     int position = (int) checkBox.getTag(R.id.checkbox);
                     if (isDeleting()) {
                         checkBox.setChecked(!checkBox.isChecked());
@@ -405,7 +455,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
         }
 
         @Override
-        public void onBindViewHolder(final ImagesViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull final ImagesViewHolder holder, final int position) {
 
             BaseModel image = mBaseModels.get(position);
 
@@ -444,9 +494,9 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
 
             ImagesViewHolder(View itemView) {
                 super(itemView);
-                image = (ImageView) itemView.findViewById(R.id.image);
-                resolution = (TextView) itemView.findViewById(R.id.resolution);
-                checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
+                image = itemView.findViewById(R.id.image);
+                resolution = itemView.findViewById(R.id.resolution);
+                checkBox = itemView.findViewById(R.id.checkbox);
             }
         }
 
@@ -480,13 +530,11 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
             }
         }
 
+        @NonNull
         @Override
-        public TagsViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
+        public TagsViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, int viewType) {
             final View rootView;
-            rootView = getActivity()
-                    .getLayoutInflater()
-                    .inflate(R.layout.item_image_library_tag, parent, false);
-
+            rootView = getActivity().getLayoutInflater().inflate(R.layout.item_image_library_tag, parent, false);
             rootView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -496,11 +544,11 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                         parent.setTag(R.id.dataList, true);
                         StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) ((RecyclerView) parent).getLayoutManager();
                         for (int i = 0; i < layoutManager.getChildCount(); i++) {
-                            CheckBox box = (CheckBox) layoutManager.getChildAt(i).findViewById(R.id.checkbox);
+                            CheckBox box = layoutManager.getChildAt(i).findViewById(R.id.checkbox);
                             box.setChecked(false);
                             box.setVisibility(View.VISIBLE);
                         }
-                        CheckBox checkBox = (CheckBox) v.findViewById(R.id.checkbox);
+                        CheckBox checkBox = v.findViewById(R.id.checkbox);
                         checkBox.setChecked(true);
                         int position = (int) checkBox.getTag(R.id.checkbox);
                         mIsCheckedList.set(position, true);
@@ -514,7 +562,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
                 public void onClick(View v) {
                     boolean isDeleting = isDeleting();
                     if (isDeleting) {
-                        CheckBox checkBox = ((CheckBox) v.findViewById(R.id.checkbox));
+                        CheckBox checkBox = (v.findViewById(R.id.checkbox));
                         checkBox.setChecked(!checkBox.isChecked());
                         int position = (int) checkBox.getTag(R.id.checkbox);
                         mIsCheckedList.set(position, checkBox.isChecked());
@@ -529,7 +577,7 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
         }
 
         @Override
-        public void onBindViewHolder(final TagsViewHolder holder, final int position) {
+        public void onBindViewHolder(@NonNull final TagsViewHolder holder, final int position) {
             String tag = mCollectionTags.get(position).getTag();
             holder.tag.setText(tag);
             holder.tag.setTag(R.id.tag, tag);
@@ -550,8 +598,8 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
 
             TagsViewHolder(View itemView) {
                 super(itemView);
-                tag = (TextView) itemView.findViewById(R.id.tag);
-                checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
+                tag = itemView.findViewById(R.id.tag);
+                checkBox = itemView.findViewById(R.id.checkbox);
             }
         }
     }
@@ -567,6 +615,10 @@ public class ImageLibraryFragment extends Fragment implements ImageLibraryContra
     }
 
     private boolean isDeleting() {
-        return (boolean) mViewPager.findViewWithTag(mViewPager.getCurrentItem()).findViewById(R.id.dataList).getTag(R.id.dataList);
+        final View rootView = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
+        if (rootView == null) {
+            return false;
+        }
+        return (boolean) rootView.findViewById(R.id.dataList).getTag(R.id.dataList);
     }
 }
